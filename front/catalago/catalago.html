@@ -40,6 +40,7 @@
           <option value="bone">Bonés</option>
           <option value="moletom">Moletons</option>
           <option value="tenis">Tênis</option>
+
         </select>
       </div>
 
@@ -50,6 +51,11 @@
           <option value="nike">Nike</option>
           <option value="puma">Puma</option>
           <option value="bmw">BMW</option>
+          <option value="adidas">Adidas</option>
+          <option value="lacoste">Lacoste</option>
+          <option value="inter">Inter maior do sul</option>
+          <option value="mizuno">Mizuno</option>
+          
         </select>
       </div>
     </div>
@@ -57,33 +63,38 @@
     <div id="lista-produtos-geral" class="grid-catalago">
       </div>
   </main>
-
-  <div id="modal-login" class="modal">
+ <div id="modal-login" class="modal">
     <div class="modal-content">
       <span class="close-modal">&times;</span>
       <h2 id="modal-titulo">Acessar Conta</h2>
       
       <div id="selecao-tipo" class="login-options">
-        <button onclick="configurarLogin('cliente')" class="btn-opt">Sou Cliente</button>
-        <button onclick="configurarRegistro()" class="btn-opt" style="border-color: #27ae60; color: #27ae60;">Criar Conta</button>
-        <hr>
-        <button onclick="configurarLogin('admin')" class="btn-opt btn-admin">Administrador</button>
+        <button onclick="configurarLogin('cliente')" class="btn-opt">
+           Sou Cliente (Entrar)
+        </button>
+        <button onclick="configurarRegistro()" class="btn-opt btn-opt-new">
+           Criar Nova Conta
+        </button>
+        <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
+        <button onclick="configurarLogin('admin')" class="btn-opt btn-admin">
+          Acesso Administrador
+        </button>
       </div>
 
       <form id="form-login" class="hidden" onsubmit="efetuarLogin(event)">
-        <input type="email" id="email" placeholder="E-mail" required>
-        <input type="password" id="senha" placeholder="Senha" required>
-        <button type="submit" class="btn-entrar">Entrar</button>
-        <p onclick="voltarSelecao()" class="btn-voltar">Voltar</p>
+        <input type="email" id="email" placeholder="Seu e-mail" required>
+        <input type="password" id="senha" placeholder="Sua senha" required>
+        <button type="submit" class="btn-primary">ENTRAR NA CONTA</button>
+        <p onclick="voltarSelecao()" class="btn-voltar">Voltar para opções</p>
       </form>
 
       <form id="form-registro" class="hidden" onsubmit="registrarCliente(event)">
         <input type="text" id="reg-nome" placeholder="Nome Completo" required>
-        <input type="email" id="reg-email" placeholder="E-mail" required>
-        <input type="tel" id="reg-telefone" placeholder="Telefone" required>
-        <input type="password" id="reg-senha" placeholder="Crie uma Senha" required>
-        <button type="submit" class="btn-entrar" style="background: #27ae60;">Cadastrar</button>
-        <p onclick="voltarSelecao()" class="btn-voltar">Voltar</p>
+        <input type="email" id="reg-email" placeholder="E-mail de acesso" required>
+        <input type="tel" id="reg-telefone" placeholder="Telefone (WhatsApp)" required>
+        <input type="password" id="reg-senha" placeholder="Crie uma senha" required>
+        <button type="submit" class="btn-primary" style="background: #27ae60;">FINALIZAR CADASTRO</button>
+        <p onclick="voltarSelecao()" class="btn-voltar">Já tenho conta? Entrar.</p>
       </form>
     </div>
   </div>

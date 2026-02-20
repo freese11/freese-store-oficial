@@ -27,33 +27,42 @@ app.post("/login", async (req, res) => {
 
     try {
         let result;
-        // O seu banco usa a tabela 'usuarios' para Admin e 'cliente' para Clientes
+
         if (tipoLoginEscolhido === 'admin') {
-            console.log("Tentando login como ADMIN");
-            result = await pool.query('SELECT * FROM usuarios WHERE email = $1 AND senha = $2 AND perfil = $3', [email, senha, 'admin']);
+            result = await pool.query(
+                'SELECT * FROM usuarios WHERE email = $1 AND senha = $2 AND perfil = $3',
+                [email, senha, 'admin']
+            );
         } else {
-console.log("Tipo de login escolhido no servidor:", tipoLoginEscolhido);
-            console.log("Tentando login como CLIENTE");
-            result = await pool.query('SELECT * FROM usuarios WHERE email = $1 AND senha = $2 AND perfil = $3', [email, senha, 'cliente']);
+            result = await pool.query(
+                'SELECT * FROM usuarios WHERE email = $1 AND senha = $2 AND perfil = $3',
+                [email, senha, 'cliente']
+            );
         }
 
         if (result.rows.length > 0) {
             const user = result.rows[0];
-            delete user.senha; // Segurança
-            
-            res.json({ 
-                sucesso: true, 
-                tipo: user.perfil, 
-                nome: user.nome 
+
+            res.json({
+                sucesso: true,
+                nome: user.nome,
+                tipo: user.perfil // 🔥 continua como tipo
             });
+
         } else {
-            res.status(401).json({ sucesso: false, message: "E-mail ou senha incorretos para este tipo de acesso" });
+            res.status(401).json({
+                sucesso: false,
+                message: "E-mail ou senha incorretos"
+            });
         }
+
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Erro no banco de dados" });
+        res.status(500).json({ error: "Erro no servidor" });
     }
 });
+
+
 
 // =====================
 // Rotas das Tabelas

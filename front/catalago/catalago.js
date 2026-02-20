@@ -1,5 +1,6 @@
 const API_URL = "http://localhost:3000/produtos";
-const API_KEY = "SUA_CHAVE_API_AQUI";
+const USUARIOS_URL = "http://localhost:3000/usuarios";
+const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
 
 const listaProdutosGeral = document.getElementById("lista-produtos-geral");
 const contadorCarrinho = document.getElementById("contador-carrinho");
@@ -8,42 +9,56 @@ const filtroCategoria = document.getElementById("filtro-categoria");
 const filtroMarca = document.getElementById("filtro-marca");
 const modal = document.getElementById("modal-login");
 
-let todosProdutos = []; 
+let todosProdutos = [];
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-window.tipoLoginEscolhido = "";
+let tipoLoginEscolhido = "";
 
-// --- 1. INICIALIZAÇÃO ---
+// ===============================
+// 1️⃣ INICIALIZAÇÃO
+// ===============================
 atualizarContador();
-carregarCatalago();
-verificarStatusUsuario(); // Mantém o nome do usuário no topo ao navegar
+carregarCatalogo();
+verificarStatusUsuario();
 
-async function carregarCatalago() {
+// ===============================
+// 2️⃣ CARREGAR PRODUTOS
+// ===============================
+async function carregarCatalogo() {
     try {
         const resposta = await fetch(API_URL);
         todosProdutos = await resposta.json();
         renderizarProdutos(todosProdutos);
     } catch (err) {
         console.error("Erro ao carregar catálogo", err);
-        listaProdutosGeral.innerHTML = "<p>Erro ao carregar produtos. Verifique o servidor.</p>";
+        listaProdutosGeral.innerHTML = "<p>Erro ao carregar produtos.</p>";
     }
 }
 
-// --- 2. LÓGICA DE USUÁRIO E LOGIN (IGUAL À INDEX) ---
+// ===============================
+// 3️⃣ STATUS DO USUÁRIO
+// ===============================
 function verificarStatusUsuario() {
     const usuarioJson = localStorage.getItem("usuarioAtivo");
     const btnLogin = document.getElementById("btn-login-abrir");
 
     if (usuarioJson && usuarioJson !== "undefined") {
         const usuario = JSON.parse(usuarioJson);
-        btnLogin.innerHTML = `👤 ${usuario.nome.split(' ')[0]} (Sair)`;
-        
+
+        btnLogin.innerHTML = ` ${usuario.nome.split(' ')[0]} (Sair)`;
+
         btnLogin.onclick = () => {
-            if(confirm("Deseja sair da conta?")) {
+            if (confirm("Deseja sair da conta?")) {
                 localStorage.removeItem("usuarioAtivo");
                 localStorage.removeItem("carrinho");
-                location.reload(); 
+                location.reload();
             }
         };
+
+        // 🔥 Se for admin redireciona
+        if (usuario.tipo && usuario.tipo.toLowerCase() === "admin") {
+            window.location.href = "/front/admin/admin.html";
+        }
+
     } else {
         btnLogin.innerText = "Login";
         btnLogin.onclick = () => {
@@ -53,42 +68,116 @@ function verificarStatusUsuario() {
     }
 }
 
+// ===============================
+// 4️⃣ LOGIN
+// ===============================
 async function efetuarLogin(event) {
     event.preventDefault();
+
     const email = document.getElementById("email").value;
     const senha = document.getElementById("senha").value;
-    const tipo = window.tipoLoginEscolhido || 'cliente';
 
     try {
         const response = await fetch("http://localhost:3000/login", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, senha, tipo })
+            headers: {
+                "Content-Type": "application/json",
+                "minha-chave": API_KEY
+            },
+            body: JSON.stringify({
+                email,
+                senha,
+                tipoLoginEscolhido
+            })
         });
-        
+
         const dados = await response.json();
 
-        if (dados.sucesso) {
+        if (response.ok && dados.sucesso) {
+
             localStorage.setItem("usuarioAtivo", JSON.stringify(dados));
-            verificarStatusUsuario(); 
+
+            // 🔥 Redireciona admin
+            if (dados.tipo && dados.tipo.toLowerCase() === "admin") {
+                window.location.href = "/front/admin/admin.html";
+                return;
+            }
+
+            verificarStatusUsuario();
             modal.style.display = "none";
 
-            // Se clicou em comprar antes de logar
+            // Produto pendente
             const pendente = sessionStorage.getItem("produtoPendente");
             if (pendente) {
                 executarAdicaoCarrinho(parseInt(pendente));
                 sessionStorage.removeItem("produtoPendente");
             }
+
             alert(`Bem-vindo, ${dados.nome}!`);
+
         } else {
-            alert(dados.message);
+            alert(dados.message || "Acesso negado.");
         }
-    } catch (err) {
+
+    } catch (erro) {
+        console.error("Erro no login:", erro);
         alert("Erro ao conectar ao servidor.");
     }
 }
 
-// --- 3. LÓGICA DO CARRINHO COM PROTEÇÃO ---
+// ===============================
+// 5️⃣ REGISTRO
+// ===============================
+async function registrarCliente(event) {
+    event.preventDefault();
+
+    const nome = document.getElementById("reg-nome").value;
+    const email = document.getElementById("reg-email").value;
+    const numero = document.getElementById("reg-telefone").value;
+    const senha = document.getElementById("reg-senha").value;
+
+    try {
+        const response = await fetch(USUARIOS_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "minha-chave": API_KEY
+            },
+            body: JSON.stringify({
+                nome,
+                email,
+                numero,
+                senha,
+                perfil: "cliente"
+            })
+        });
+
+        const resultado = await response.json();
+
+        if (response.ok) {
+
+            localStorage.setItem("usuarioAtivo", JSON.stringify({
+                sucesso: true,
+                nome: resultado.nome,
+                tipo: resultado.perfil
+            }));
+
+            verificarStatusUsuario();
+            modal.style.display = "none";
+            alert("Conta criada com sucesso!");
+
+        } else {
+            alert("Erro ao cadastrar.");
+        }
+
+    } catch (err) {
+        alert("Erro de conexão com o servidor.");
+    }
+}
+
+// ===============================
+// 6️⃣ CARRINHO
+// ===============================
 function adicionarCarrinho(codproduto) {
     const usuario = localStorage.getItem("usuarioAtivo");
 
@@ -99,16 +188,17 @@ function adicionarCarrinho(codproduto) {
         voltarSelecao();
         return;
     }
+
     executarAdicaoCarrinho(codproduto);
 }
 
 function executarAdicaoCarrinho(codproduto) {
     const item = carrinho.find(p => p.codproduto === codproduto);
     item ? item.qtd++ : carrinho.push({ codproduto, qtd: 1 });
-    
+
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
     atualizarContador();
-    toggleCarrinho(true); // Abre o carrinho lateral automaticamente
+    toggleCarrinho(true);
 }
 
 function atualizarContador() {
@@ -118,19 +208,18 @@ function atualizarContador() {
 function toggleCarrinho(abrir = false) {
     const side = document.getElementById("carrinho-lateral");
     const overlay = document.getElementById("carrinho-overlay");
-    
-    if (abrir) { 
-        side.classList.add("ativo"); 
-        overlay.style.display = "block"; 
-    } else { 
-        side.classList.toggle("ativo"); 
-        overlay.style.display = side.classList.contains("ativo") ? "block" : "none"; 
+
+    if (abrir) {
+        side.classList.add("ativo");
+        overlay.style.display = "block";
+    } else {
+        side.classList.toggle("ativo");
+        overlay.style.display = side.classList.contains("ativo") ? "block" : "none";
     }
-    
+
     if (side.classList.contains("ativo")) renderizarItensCarrinho();
 }
 
-// Vincula o clique do ícone de carrinho no header
 document.querySelector(".carrinho").onclick = () => toggleCarrinho();
 
 async function renderizarItensCarrinho() {
@@ -147,6 +236,7 @@ async function renderizarItensCarrinho() {
             const p = produtosBD.find(prod => prod.codproduto === item.codproduto);
             if (p) {
                 totalGeral += p.valor * item.qtd;
+
                 container.innerHTML += `
                     <div class="item-no-carrinho">
                         <img src="${p.img}">
@@ -157,22 +247,32 @@ async function renderizarItensCarrinho() {
                     </div>`;
             }
         });
+
         totalElement.innerText = `R$ ${totalGeral.toFixed(2)}`;
-    } catch (e) { console.error(e); }
+    } catch (e) {
+        console.error(e);
+    }
 }
 
-// --- 4. FILTROS E RENDERIZAÇÃO ---
+// ===============================
+// 7️⃣ FILTROS
+// ===============================
 function renderizarProdutos(produtos) {
     listaProdutosGeral.innerHTML = "";
+
     produtos.forEach(produto => {
         const div = document.createElement("div");
         div.className = "produto";
+
         div.innerHTML = `
             <img src="${produto.img}" alt="${produto.nome}">
             <h3>${produto.nome}</h3>
             <p class="preco">R$ ${Number(produto.valor).toFixed(2)}</p>
-            <button onclick="adicionarCarrinho(${produto.codproduto})">ADICIONAR AO CARRINHO</button>
+            <button onclick="adicionarCarrinho(${produto.codproduto})">
+                ADICIONAR AO CARRINHO
+            </button>
         `;
+
         listaProdutosGeral.appendChild(div);
     });
 }
@@ -184,10 +284,12 @@ function filtrarProdutos() {
 
     const filtrados = todosProdutos.filter(p => {
         const nome = p.nome.toLowerCase();
-        return nome.includes(termo) && 
+
+        return nome.includes(termo) &&
                (categoria === "todos" || nome.includes(categoria)) &&
                (marca === "todos" || nome.includes(marca));
     });
+
     renderizarProdutos(filtrados);
 }
 
@@ -195,21 +297,31 @@ inputBusca.addEventListener("input", filtrarProdutos);
 filtroCategoria.addEventListener("change", filtrarProdutos);
 filtroMarca.addEventListener("change", filtrarProdutos);
 
-// --- 5. AUXILIARES MODAL ---
+// ===============================
+// 8️⃣ MODAL
+// ===============================
 function configurarLogin(tipo) {
-    window.tipoLoginEscolhido = tipo;
+    tipoLoginEscolhido = tipo;
+
     document.getElementById("selecao-tipo").classList.add("hidden");
     document.getElementById("form-login").classList.remove("hidden");
-    document.getElementById("modal-titulo").innerText = tipo === 'admin' ? 'Login Admin' : 'Login Cliente';
+    document.getElementById("modal-titulo").innerText =
+        tipo === "admin" ? "Login Admin" : "Login Cliente";
 }
+
 function configurarRegistro() {
     document.getElementById("selecao-tipo").classList.add("hidden");
+    document.getElementById("form-login").classList.add("hidden");
     document.getElementById("form-registro").classList.remove("hidden");
+    document.getElementById("modal-titulo").innerText = "Criar Nova Conta";
 }
+
 function voltarSelecao() {
     document.getElementById("selecao-tipo").classList.remove("hidden");
     document.getElementById("form-login").classList.add("hidden");
     document.getElementById("form-registro").classList.add("hidden");
-    document.getElementById("modal-titulo").innerText = 'Acessar Conta';
+    document.getElementById("modal-titulo").innerText = "Acessar Conta";
 }
-document.querySelector(".close-modal").onclick = () => modal.style.display = "none";
+
+document.querySelector(".close-modal").onclick =
+    () => modal.style.display = "none";

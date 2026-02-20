@@ -1,6 +1,12 @@
 const USUARIOS_URL = "http://localhost:3000/usuarios";
 const API_URL = "http://localhost:3000/produtos";
 const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
+const usuarioLogado = JSON.parse(localStorage.getItem("usuarioAtivo"));
+
+if (usuarioLogado && usuarioLogado.tipo === "admin") {
+    window.location.href = "/front/admin/admin.html";
+}
+
 
 let tipoLoginEscolhido = ""; // Variável global para armazenar o tipo de login selecionado (admin ou cliente)
 
@@ -66,56 +72,58 @@ function verificarStatusUsuario() {
             voltarSelecao();
         };
     }
-}async function efetuarLogin(event) {
+}
+ async function efetuarLogin(event) {
     event.preventDefault();
+
     const email = document.getElementById("email").value;
     const senha = document.getElementById("senha").value;
-    
 
     try {
-        console.log("antes do fetch");
         const response = await fetch("http://localhost:3000/login", {
             method: "POST",
-            headers: { 
+            headers: {
                 "Content-Type": "application/json",
-                "minha-chave": API_KEY // <--- A chave de acesso que seu servidor exige
+                "minha-chave": API_KEY
             },
-            body: JSON.stringify({ email, senha,tipoLoginEscolhido })
+            body: JSON.stringify({
+                email,
+                senha,
+                tipoLoginEscolhido
+            })
         });
 
         const dados = await response.json();
+        console.log("DADOS RECEBIDOS:", dados);
 
         if (response.ok && dados.sucesso) {
-            // 1. Salva os dados no navegador
+
+            // salva usuário
             localStorage.setItem("usuarioAtivo", JSON.stringify(dados));
 
-            // 2. VERIFICAÇÃO DE ADMIN: Redireciona se o perfil for 'admin'
-            if (dados.perfil === 'admin') {
-                alert(`Olá, Admin ${dados.nome}! Acessando painel...`);
-                window.location.href = "/front/admin/admin.html"; 
+            // 🔥 VERIFICA ADMIN CORRETAMENTE
+            if (dados.tipo && dados.tipo.toLowerCase() === "admin") {
+                console.log("REDIRECIONANDO PARA ADMIN...");
+                window.location.href = "/front/admin/admin.html";
                 return;
             }
 
-            // 3. SE FOR CLIENTE: Segue na loja
+            // CLIENTE NORMAL
             verificarStatusUsuario();
             modal.style.display = "none";
-
-            const pendente = sessionStorage.getItem("produtoPendente");
-            if (pendente) {
-                executarAdicaoCarrinho(parseInt(pendente));
-                sessionStorage.removeItem("produtoPendente");
-            }
             alert(`Bem-vindo, ${dados.nome}!`);
 
         } else {
-            // Se o servidor retornar 401, ele cai aqui
-            alert(dados.message || "Acesso negado: Credenciais inválidas ou sem permissão.");
+            alert(dados.message || "Acesso negado.");
         }
-    } catch (err) {
-        console.error("Erro no Login:", err);
-        alert("Erro ao conectar ao servidor.",err.message);
+
+    } catch (erro) {
+        console.error("Erro no login:", erro);
+        alert("Erro ao conectar ao servidor.");
     }
 }
+
+
 // --- 3. LÓGICA DO CARRINHO ---
 
 function adicionarCarrinho(codproduto) {
@@ -180,7 +188,7 @@ async function carregarProdutos() {
 
         // Filtra apenas Puma (independente de maiúscula/minúscula)
         const produtosPuma = produtos.filter(p =>
-            p.nome.toLowerCase().includes("puma")
+            p.nome.toLowerCase().includes("bmw")
         );
 
         produtosPuma.forEach(produto => {
@@ -197,7 +205,7 @@ async function carregarProdutos() {
     } catch (err) {
         console.error("Erro ao carregar:", err);
     }
-}async function registrarCliente(event) {
+} async function registrarCliente(event) {
     event.preventDefault();
     const nome = document.getElementById("reg-nome").value;
     const email = document.getElementById("reg-email").value;
@@ -207,7 +215,7 @@ async function carregarProdutos() {
     try {
         const response = await fetch(USUARIOS_URL, {
             method: "POST",
-            headers: { 
+            headers: {
                 "Content-Type": "application/json",
                 "minha-chave": API_KEY // <--- Enviando a chave no cadastro também
             },

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Controle - Freese Store</title>
-    <link rel="stylesheet" href="/front/admin/admin.css">
+    <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -14,6 +14,13 @@
         <button onclick="logout()" class="btn-sair">Sair do Sistema</button>
     </header>
 
+    <section class="admin-banner">
+        <div class="banner-content">
+            <h2>MENTALIDADE CAMPEÃ, EXECUÇÃO DE ELITE.</h2>
+            <p>A vitória da Freese Store começa na nossa gestão.</p>
+        </div>
+    </section>
+
     <main class="hub-container">
         <div class="hub-intro">
             <h1>Bem-vindo, Administrador</h1>
@@ -21,7 +28,7 @@
         </div>
 
         <div class="hub-grid">
-            <a href="vendas/vendas.html" class="hub-card">
+            <a href="/front/vendas/vendas.html" class="hub-card">
                 <i class="fas fa-chart-line"></i>
                 <div class="hub-info">
                     <h3>Vendas</h3>
@@ -29,7 +36,7 @@
                 </div>
             </a>
 
-            <a href="produtos/produtos.html" class="hub-card">
+            <a href="/front/produtos/produtos.html" class="hub-card">
                 <i class="fas fa-box-open"></i>
                 <div class="hub-info">
                     <h3>Produtos</h3>
@@ -37,15 +44,7 @@
                 </div>
             </a>
 
-            <a href="clientes/clientes.html" class="hub-card">
-                <i class="fas fa-users"></i>
-                <div class="hub-info">
-                    <h3>Clientes</h3>
-                    <p>Gerenciar dados dos compradores</p>
-                </div>
-            </a>
-
-            <a href="usuarios/usuarios.html" class="hub-card">
+            <a href="/front/usuarios/usuarios.html" class="hub-card">
                 <i class="fas fa-user-shield"></i>
                 <div class="hub-info">
                     <h3>Usuários</h3>
@@ -58,6 +57,22 @@
     <footer class="hub-footer">
         © 2026 Freese Store - Ambiente Seguro
     </footer>
+
+    <script>
+        function logout() {
+            if (confirm("Deseja realmente sair do sistema?")) {
+                localStorage.removeItem("usuarioAtivo");
+                localStorage.removeItem("carrinho");
+                window.location.href = "/front/index.html";
+            }
+        }
+
+        const usuario = JSON.parse(localStorage.getItem("usuarioAtivo"));
+
+        if (!usuario || usuario.tipo !== "admin") {
+            window.location.href = "/front/index.html";
+        }
+    </script>
 
 </body>
 </html>

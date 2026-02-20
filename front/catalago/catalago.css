@@ -138,6 +138,97 @@ body {
   border-radius: 4px;
 }
 
+/* --- BOTÕES DE SELEÇÃO (CLIENTE/ADMIN) --- */
+.login-options { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+    margin-top: 10px; 
+}
+
+.btn-opt { 
+    padding: 15px; 
+    border: 2px solid #e0e0e0; 
+    background: #fff; 
+    cursor: pointer; 
+    font-weight: bold; 
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.btn-opt:hover { 
+    border-color: #000; 
+    background: #f9f9f9;
+    transform: translateY(-2px);
+}
+
+.btn-admin { 
+    border-color: #fceaea; 
+    color: #a70101; 
+}
+.btn-admin:hover {
+    background: #fceaea;
+    border-color: #a70101;
+}
+
+/* --- FORMULÁRIOS E INPUTS --- */
+#form-login, #form-registro {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+input:focus {
+    border-color: #a70101;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(167, 1, 1, 0.1);
+}
+
+/* --- BOTÃO DE AÇÃO (ENTRAR/CADASTRAR) --- */
+/* Usei a classe do seu banner para manter o estilo que você gosta */
+#form-login button, #form-registro button {
+    padding: 16px;
+    background: #000;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#form-login button:hover, #form-registro button:hover {
+    background: #a70101;
+    transform: translateY(-2px);
+}
+
+.btn-voltar { 
+    font-size: 12px; 
+    margin-top: 20px; 
+    cursor: pointer; 
+    text-decoration: underline; 
+    color: #888; 
+    transition: 0.3s;
+}
+.btn-voltar:hover { color: #000; }
+
+.hidden { display: none !important; }
+
 /* MODAL & AUXILIARES */
 .hidden { display: none !important; }
 .modal {

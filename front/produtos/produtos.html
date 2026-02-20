@@ -2,61 +2,76 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin - Freese Store</title>
-    <link rel="stylesheet" href="admin.css">
+    <title>Admin - Produtos</title>
+    <link rel="stylesheet" href="produtos.css">
 </head>
 <body>
-    <header class="admin-header">
-        <div class="logo">FREESE STORE <span class="badge">ADMIN</span></div>
-        <nav class="admin-nav">
-            <a href="../catalago/catalago.html">Ver Loja</a>
-            <button id="btn-sair" onclick="logout()">Sair</button>
-        </nav>
-    </header>
 
-    <main class="admin-main">
-        <section class="card">
-            <h2>Cadastrar Novo Produto</h2>
-            <form id="form-produto" class="admin-form">
-                <div class="input-group">
-                    <input type="text" id="nome" placeholder="Nome do Produto (Ex: Camisa Nike)" required>
-                    <input type="number" id="valor" step="0.01" placeholder="Preço (R$)" required>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="img" placeholder="URL da Imagem">
-                    <select id="categoria-select">
-                        <option value="">Selecione a Categoria</option>
-                        <option value="camisa">Camisa</option>
-                        <option value="bone">Boné</option>
-                        <option value="tenis">Tênis</option>
-                        <option value="moletom">Moletom</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-salvar">Adicionar ao Catálogo</button>
-            </form>
-        </section>
+<header class="topbar">
+    <div class="left">
+        <button class="btn-voltar" onclick="voltar()">← Voltar</button>
+        <h1>Gerenciamento de Produtos</h1>
+    </div>
+    <button class="btn-novo" onclick="abrirModal()">+ Novo Produto</button>
+</header>
 
-        <section class="card">
-            <h2>Produtos no Inventário</h2>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Foto</th>
-                            <th>Nome</th>
-                            <th>Preço</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabela-produtos-corpo">
-                        </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
+<section class="filtros">
+    <input type="text" id="filtro-nome" placeholder="Buscar produto..." oninput="filtrar()">
 
-    <script src="admin.js"></script>
+    <select id="filtro-status" onchange="filtrar()">
+        <option value="">Todos</option>
+        <option value="ativo">Ativo</option>
+        <option value="inativo">Inativo</option>
+    </select>
+</section>
+
+<div class="tabela-container">
+<table>
+    <thead>
+        <tr>
+            <th>Imagem</th>
+            <th>Nome</th>
+            <th>Marca</th>
+            <th>Preço</th>
+            <th>Estoque</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody id="tabela-produtos"></tbody>
+</table>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h2 id="modal-titulo">Novo Produto</h2>
+
+        <input type="hidden" id="codproduto">
+
+        <input type="text" id="nome" placeholder="Nome">
+        <input type="text" id="marca" placeholder="Marca">
+        <input type="number" id="valor" placeholder="Preço">
+        <input type="number" id="estoque" placeholder="Estoque">
+        <input type="text" id="tipo" placeholder="Tipo">
+        <input type="text" id="cor" placeholder="Cor">
+        <input type="text" id="tamanho" placeholder="Tamanho">
+        <input type="text" id="img" placeholder="URL da imagem" oninput="previewImagem()">
+
+        <img id="preview" class="preview-img">
+
+        <select id="ativoinativo">
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+        </select>
+
+        <div class="modal-buttons">
+            <button class="salvar" onclick="salvar()">Salvar</button>
+            <button class="cancelar" onclick="fecharModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script src="produtos.js"></script>
 </body>
 </html>
