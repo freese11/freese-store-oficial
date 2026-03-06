@@ -14,6 +14,9 @@ app.use(cors());
 app.use(express.json());
 app.use(autenticarAPIkey);
 
+// 🔹 liberar acesso às imagens enviadas
+app.use('/uploads', express.static('uploads'));
+
 // Rota raiz
 app.get("/", (req, res) => {
   res.send("🌎 API de Produtos rodando!");
@@ -27,9 +30,10 @@ app.post("/login", async (req, res) => {
 
     try {
         let result;
-console.log("TIPO DE LOGIN SOLICITADO:", tipoLoginEscolhido);
-        if (tipoLoginEscolhido === 'admin') 
-            {
+
+        console.log("TIPO DE LOGIN SOLICITADO:", tipoLoginEscolhido);
+
+        if (tipoLoginEscolhido === 'admin') {
             result = await pool.query(
                 'SELECT * FROM usuarios WHERE email = $1 AND senha = $2 AND perfil = $3',
                 [email, senha, 'adm']
@@ -47,7 +51,7 @@ console.log("TIPO DE LOGIN SOLICITADO:", tipoLoginEscolhido);
             res.json({
                 sucesso: true,
                 nome: user.nome,
-                tipo: user.perfil // 🔥 continua como tipo
+                tipo: user.perfil
             });
 
         } else {
@@ -64,10 +68,10 @@ console.log("TIPO DE LOGIN SOLICITADO:", tipoLoginEscolhido);
 });
 
 
-
 // =====================
 // Rotas das Tabelas
 // =====================
+
 // A rota de produtos fica fora do autenticador para o catálogo ser público
 app.use("/produtos", produtosRouter);
 
@@ -77,6 +81,7 @@ app.use("/usuarios", usuariosRouter);
 app.use("/vendas", vendasRouter);
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ Servidor rodando em http://localhost:${PORT}`);
 });
