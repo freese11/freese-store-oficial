@@ -1,5 +1,7 @@
 const API_URL = "http://localhost:3000/produtos";
 const USUARIOS_URL = "http://localhost:3000/usuarios";
+
+// 👇 CORRIGIDO: Chave exatamente igual à do servidor
 const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
 
 const listaProdutosGeral = document.getElementById("lista-produtos-geral");
@@ -18,6 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
     carregarCatalogo();
     atualizarContador();
     verificarStatusUsuario();
+    
+    // Conecta o formulário de login com a nossa função segura
+    const formLogin = document.getElementById("form-login");
+    if (formLogin) {
+        formLogin.addEventListener("submit", efetuarLogin);
+    }
 });
 
 async function carregarCatalogo() {
@@ -26,20 +34,24 @@ async function carregarCatalogo() {
         todosProdutos = await resposta.json();
         renderizarProdutos(todosProdutos);
     } catch (err) {
-        listaProdutosGeral.innerHTML = "<p>Erro ao carregar produtos.</p>";
+        if(listaProdutosGeral) listaProdutosGeral.innerHTML = "<p>Erro ao carregar produtos.</p>";
     }
 }
 
 function renderizarProdutos(produtos) {
     if(!listaProdutosGeral) return;
     listaProdutosGeral.innerHTML = "";
+    
     produtos.forEach(p => {
         const div = document.createElement("div");
         div.className = "produto";
+        
         div.innerHTML = `
-            <img src="${p.img}" alt="${p.nome}">
-            <h3>${p.nome}</h3>
-            <p class="preco">R$ ${Number(p.valor).toFixed(2)}</p>
+            <div style="cursor: pointer;" onclick="window.location.href='/front/detalhes/detalhes.html?id=${p.codproduto}'">
+                <img src="${p.img}" alt="${p.nome}">
+                <h3>${p.nome}</h3>
+                <p class="preco">R$ ${Number(p.valor).toFixed(2)}</p>
+            </div>
             <button onclick="adicionarCarrinho(${p.codproduto})">ADICIONAR AO CARRINHO</button>
         `;
         listaProdutosGeral.appendChild(div);
@@ -47,6 +59,7 @@ function renderizarProdutos(produtos) {
 }
 
 function filtrarProdutos() {
+    if(!inputBusca || !filtroCategoria || !filtroMarca) return;
     const termo = inputBusca.value.toLowerCase();
     const categoria = filtroCategoria.value.toLowerCase();
     const marca = filtroMarca.value.toLowerCase();
@@ -61,15 +74,15 @@ function filtrarProdutos() {
 }
 
 // Eventos de Filtro
-inputBusca.addEventListener("input", filtrarProdutos);
-filtroCategoria.addEventListener("change", filtrarProdutos);
-filtroMarca.addEventListener("change", filtrarProdutos);
+if(inputBusca) inputBusca.addEventListener("input", filtrarProdutos);
+if(filtroCategoria) filtroCategoria.addEventListener("change", filtrarProdutos);
+if(filtroMarca) filtroMarca.addEventListener("change", filtrarProdutos);
 
 // Funções de Carrinho
 function adicionarCarrinho(codproduto) {
     if (!localStorage.getItem("usuarioAtivo")) {
         alert("Acesse sua conta para comprar.");
-        modal.style.display = "block";
+        if(modal) modal.style.display = "block";
         return;
     }
     const item = carrinho.find(p => p.codproduto === codproduto);
@@ -86,6 +99,8 @@ function atualizarContador() {
 function toggleCarrinho(abrir = false) {
     const side = document.getElementById("carrinho-lateral");
     const overlay = document.getElementById("carrinho-overlay");
+    if(!side || !overlay) return;
+
     if(abrir) { side.classList.add("ativo"); overlay.style.display = "block"; renderizarItensCarrinho(); }
     else { side.classList.remove("ativo"); overlay.style.display = "none"; }
 }
@@ -93,33 +108,201 @@ function toggleCarrinho(abrir = false) {
 async function renderizarItensCarrinho() {
     const container = document.getElementById("itens-carrinho");
     const totalElement = document.getElementById("valor-total-carrinho");
+    if(!container || !totalElement) return;
+
     container.innerHTML = "";
     let total = 0;
+    
     carrinho.forEach(item => {
         const p = todosProdutos.find(prod => prod.codproduto === item.codproduto);
         if(p) {
             total += p.valor * item.qtd;
-            container.innerHTML += `<div class="item-no-carrinho"><img src="${p.img}"><div><p>${p.nome}</p><p>${item.qtd}x R$ ${p.valor}</p></div></div>`;
+            container.innerHTML += `
+                <div class="item-no-carrinho">
+                    <img src="${p.img}">
+                    <div>
+                        <p style="font-weight: bold;">${p.nome}</p>
+                        <p style="font-size: 13px; color: #666;">Tamanho: ${item.tamanho || 'Único'}</p>
+                        <p>${item.qtd}x R$ ${Number(p.valor).toFixed(2)}</p>
+                    </div>
+                </div>`;
         }
     });
     totalElement.innerText = `R$ ${total.toFixed(2)}`;
 }
 
-// Login/Status (Copiado da Home para consistência)
+// Login/Status 
 function verificarStatusUsuario() {
     const usuarioJson = localStorage.getItem("usuarioAtivo");
     const btnLogin = document.getElementById("btn-login-abrir");
+    if(!btnLogin) return;
+
     if (usuarioJson && usuarioJson !== "undefined") {
         const usuario = JSON.parse(usuarioJson);
         btnLogin.innerHTML = `<i class="fas fa-user-check"></i> ${usuario.nome.split(' ')[0]} (Sair)`;
-        btnLogin.onclick = () => { if(confirm("Sair?")) { localStorage.clear(); location.reload(); }};
+        btnLogin.onclick = () => { if(confirm("Sair da conta?")) { localStorage.clear(); location.reload(); }};
     } else {
         btnLogin.onclick = () => { modal.style.display = "block"; voltarSelecao(); };
     }
 }
 
 // Funções auxiliares do modal
-function configurarLogin(tipo) { tipoLoginEscolhido = tipo; document.getElementById("selecao-tipo").classList.add("hidden"); document.getElementById("form-login").classList.remove("hidden"); }
-function configurarRegistro() { document.getElementById("selecao-tipo").classList.add("hidden"); document.getElementById("form-registro").classList.remove("hidden"); }
-function voltarSelecao() { document.getElementById("selecao-tipo").classList.remove("hidden"); document.getElementById("form-login").classList.add("hidden"); document.getElementById("form-registro").classList.add("hidden"); }
-document.querySelector(".close-modal").onclick = () => modal.style.display = "none";
+function configurarLogin(tipo) { 
+    tipoLoginEscolhido = tipo; 
+    document.getElementById("selecao-tipo").classList.add("hidden"); 
+    document.getElementById("form-login").classList.remove("hidden"); 
+}
+
+function configurarRegistro() { 
+    document.getElementById("selecao-tipo").classList.add("hidden"); 
+    document.getElementById("form-registro").classList.remove("hidden"); 
+}
+
+function voltarSelecao() { 
+    document.getElementById("selecao-tipo").classList.remove("hidden"); 
+    document.getElementById("form-login").classList.add("hidden"); 
+    document.getElementById("form-registro").classList.add("hidden"); 
+}
+
+const btnClose = document.querySelector(".close-modal");
+if(btnClose) btnClose.onclick = () => modal.style.display = "none";
+
+// 👇 A MÁGICA ACONTECE AQUI: FUNÇÃO NOVA PARA EFETUAR O LOGIN 👇
+async function efetuarLogin(event) {
+    if(event) event.preventDefault(); // Evita que a página recarregue ao clicar em "Entrar"
+
+    // Busca os inputs de e-mail e senha no HTML (ajusta para os IDs mais comuns)
+    const emailInput = document.getElementById("email") || document.querySelector('input[type="email"]');
+    const senhaInput = document.getElementById("senha") || document.querySelector('input[type="password"]');
+
+    if (!emailInput || !senhaInput) {
+        alert("Erro no código HTML: Campos de email ou senha não encontrados.");
+        return;
+    }
+
+    try {
+        const resposta = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'minha-chave': API_KEY // 👈 Enviando a chave secreta exigida pelo servidor!
+            },
+            body: JSON.stringify({
+                email: emailInput.value,
+                senha: senhaInput.value,
+                tipoLoginEscolhido: tipoLoginEscolhido || 'cliente'
+            })
+        });
+
+        const dados = await resposta.json();
+
+        if (resposta.ok && dados.sucesso) {
+            // Sucesso! Salva o usuário no navegador e atualiza a tela
+            localStorage.setItem("usuarioAtivo", JSON.stringify(dados));
+            location.reload(); 
+        } else {
+            // Se errou a senha
+            alert(dados.message || "E-mail ou senha incorretos!");
+        }
+    } catch (erro) {
+        console.error("Erro no login:", erro);
+        alert("Erro ao conectar com o servidor.");
+    }
+}
+
+
+// ==========================================
+// FUNÇÃO PARA FINALIZAR A VENDA (CHECKOUT)
+// ==========================================
+async function finalizarCompra() {
+    const carrinhoAtual = JSON.parse(localStorage.getItem("carrinho")) || [];
+    const usuarioJson = localStorage.getItem("usuarioAtivo");
+
+    // 1. Verifica se o carrinho tem itens
+    if (carrinhoAtual.length === 0) {
+        alert("O seu carrinho está vazio! Adicione produtos antes de comprar.");
+        return;
+    }
+
+    // 2. Verifica se o usuário está logado
+    if (!usuarioJson) {
+        alert("Você precisa fazer login para finalizar a compra.");
+        const modal = document.getElementById("modal-login");
+        if(modal) modal.style.display = "block";
+        return;
+    }
+
+    const usuarioLogado = JSON.parse(usuarioJson);
+    // Pega o ID do usuário (ajuste caso o seu banco retorne um nome diferente, ex: codcliente)
+    const idUsuario = usuarioLogado.codusuario || usuarioLogado.id || usuarioLogado.codcliente;
+
+    // Muda o botão para mostrar que está carregando
+    const btnFinalizar = document.getElementById("btn-finalizar-compra");
+    if (btnFinalizar) {
+        btnFinalizar.innerText = "Processando...";
+        btnFinalizar.disabled = true;
+    }
+
+    try {
+        // Pega a data de hoje no formato YYYY-MM-DD (Padrão de banco de dados)
+        const dataAtual = new Date().toISOString().split('T')[0]; 
+        
+        let sucessoGeral = true;
+
+        // 3. Como o banco aceita 1 produto por vez, fazemos um loop no carrinho
+        for (const item of carrinhoAtual) {
+            // Acha o preço do produto na lista de produtos carregada
+            const produto = todosProdutos.find(p => p.codproduto === item.codproduto);
+            if (!produto) continue;
+
+            const valorTotalDoItem = produto.valor * item.qtd;
+
+            // Monta os dados exatamente como o seu vendasDB.js pede
+            const dadosDaVenda = {
+                codcliente: idUsuario,
+                codproduto: item.codproduto,
+                codusuario: idUsuario, // Usamos o mesmo ID para cliente e usuário logado
+                status: "Pendente",
+                data: dataAtual,
+                valortotal: valorTotalDoItem
+            };
+
+            // 4. Envia para a sua API com a Chave de Segurança!
+            const resposta = await fetch('http://localhost:3000/vendas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'minha-chave': API_KEY // A chave que libera o acesso no servidor!
+                },
+                body: JSON.stringify(dadosDaVenda)
+            });
+
+            if (!resposta.ok) {
+                sucessoGeral = false;
+                console.error("Erro ao salvar o produto:", item.codproduto);
+            }
+        }
+
+        // 5. Verifica se tudo deu certo
+        if (sucessoGeral) {
+            alert("🎉 Compra realizada com sucesso! A Freese Store agradece sua preferência.");
+            localStorage.removeItem("carrinho"); // Esvazia a memória do navegador
+            carrinho = []; // Zera a variável
+            atualizarContador();
+            toggleCarrinho(false); // Fecha a barra lateral
+            location.reload(); // Recarrega para limpar tudo
+        } else {
+            alert("Tivemos um problema ao registrar alguns itens. Tente novamente.");
+        }
+
+    } catch (erro) {
+        console.error("Erro no checkout:", erro);
+        alert("Erro de conexão com o servidor. Tente novamente mais tarde.");
+    } finally {
+        // Volta o botão ao normal
+        if (btnFinalizar) {
+            btnFinalizar.innerText = "FINALIZAR COMPRA";
+            btnFinalizar.disabled = false;
+        }
+    }
+}

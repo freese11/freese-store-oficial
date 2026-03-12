@@ -30,15 +30,16 @@ app.post("/login", async (req, res) => {
 
     try {
         let result;
-
         console.log("TIPO DE LOGIN SOLICITADO:", tipoLoginEscolhido);
 
         if (tipoLoginEscolhido === 'admin') {
+            // Busca o admin na tabela usuarios
             result = await pool.query(
                 'SELECT * FROM usuarios WHERE email = $1 AND senha = $2 AND perfil = $3',
                 [email, senha, 'adm']
             );
         } else {
+            // Busca o cliente na tabela usuarios (COMO VOCÊ FEZ ORIGINALMENTE!)
             result = await pool.query(
                 'SELECT * FROM usuarios WHERE email = $1 AND senha = $2 AND perfil = $3',
                 [email, senha, 'cliente']
@@ -47,7 +48,6 @@ app.post("/login", async (req, res) => {
 
         if (result.rows.length > 0) {
             const user = result.rows[0];
-
             res.json({
                 sucesso: true,
                 nome: user.nome,
@@ -66,7 +66,6 @@ app.post("/login", async (req, res) => {
         res.status(500).json({ error: "Erro no servidor" });
     }
 });
-
 
 // =====================
 // Rotas das Tabelas

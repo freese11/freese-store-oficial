@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catálogo Completo | Freese Store</title>
-  <link rel="stylesheet" href="catalago.css">
+  <title>Detalhes do Produto | Freese Store</title>
+  <link rel="stylesheet" href="detalhes.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
+<!-- TOPO IGUAL AO CATÁLOGO -->
 <div class="top-bar">
     <span><i class="fas fa-truck"></i> FRETE GRÁTIS EM COMPRAS ACIMA DE R$ 499</span>
 </div>
@@ -18,12 +19,9 @@
   <div class="logo" onclick="window.location.href='/front/index.html'">
       <img src="/front/midias/freese2.png" alt="Freese Store">
   </div>
-
-  <input type="text" id="input-busca" class="search" placeholder="Buscar por modelo ou marca..." />
-
   <div class="acoes">
       <span id="btn-login-abrir" style="cursor:pointer"><i class="far fa-user"></i> Login</span>
-      <span class="carrinho" id="abrir-carrinho" style="cursor:pointer">
+      <span class="carrinho" id="abrir-carrinho" style="cursor:pointer" onclick="toggleCarrinho(true)">
         <i class="fas fa-shopping-bag"></i> <span id="contador-carrinho">0</span>
       </span>
   </div>
@@ -31,46 +29,22 @@
 
 <nav class="menu">
   <a href="/front/index.html">Início</a>
-  <a href="/front/catalago/catalago.html" class="active">Catálogo</a>
+  <a href="/front/catalago/catalago.html">Catálogo</a>
   <a href="/front/contato/contato.html">Contato</a>
 </nav>
 
-<main class="conteudo-catalago">
-    <div class="header-pagina">
-      <h2>Explore Nosso <span>Estoque</span></h2>
-      <p>As melhores marcas do street wear mundial em um só lugar.</p>
+<!-- ÁREA DO PRODUTO (NOVIDADE AQUI) -->
+<main class="conteudo-detalhes">
+    <div class="botao-voltar" onclick="window.location.href='/front/catalago/catalago.html'">
+        <i class="fas fa-arrow-left"></i> Voltar ao Catálogo
     </div>
 
-    <div class="filtros-container">
-      <div class="filtro-grupo">
-        <label><i class="fas fa-filter"></i> Categoria:</label>
-        <select id="filtro-categoria" class="select-filtro">
-          <option value="todos">Todas</option>
-          <option value="camisa">Camisas</option>
-          <option value="bone">Bonés</option>
-          <option value="moletom">Moletons</option>
-          <option value="tenis">Tênis</option>
-        </select>
-      </div>
-
-      <div class="filtro-grupo">
-        <label><i class="fas fa-tags"></i> Marca:</label>
-        <select id="filtro-marca" class="select-filtro">
-          <option value="todos">Todas Marcas</option>
-          <option value="nike">Nike</option>
-          <option value="puma">Puma</option>
-          <option value="bmw">BMW</option>
-          <option value="adidas">Adidas</option>
-          <option value="lacoste">Lacoste</option>
-          <option value="mizuno">Mizuno</option>
-        </select>
-      </div>
+    <div class="produto-wrapper" id="produto-wrapper">
+        <h2 style="text-align: center; width: 100%;">Carregando detalhes do produto...</h2>
     </div>
-    
-    <div id="lista-produtos-geral" class="grid-catalago">
-        </div>
 </main>
 
+<!-- MODAL DE LOGIN (CÓPIA EXATA DO CATÁLOGO) -->
 <div id="modal-login" class="modal">
     <div class="modal-content">
       <span class="close-modal">&times;</span>
@@ -91,9 +65,9 @@
       </form>
 
       <form id="form-registro" class="hidden" onsubmit="registrarCliente(event)">
+        <!-- Campos de registro resumidos para manter o padrão -->
         <input type="text" id="reg-nome" placeholder="Nome Completo" required>
         <input type="email" id="reg-email" placeholder="E-mail" required>
-        <input type="tel" id="reg-telefone" placeholder="WhatsApp" required>
         <input type="password" id="reg-senha" placeholder="Senha" required>
         <button type="submit" class="btn-primary">FINALIZAR CADASTRO</button>
         <p onclick="voltarSelecao()" class="btn-voltar">Já tem conta? Entrar.</p>
@@ -101,6 +75,7 @@
     </div>
 </div>
 
+<!-- CARRINHO LATERAL (CÓPIA EXATA DO CATÁLOGO) -->
 <div id="carrinho-lateral" class="carrinho-sidebar">
     <div class="carrinho-header">
         <h2>Seu Carrinho</h2>
@@ -112,11 +87,11 @@
             <span>Total:</span>
             <span id="valor-total-carrinho">R$ 0,00</span>
         </div>
-<button id="btn-finalizar-compra" onclick="finalizarCompra()">FINALIZAR COMPRA</button>
+        <button onclick="alert('Indo para checkout...')" class="btn-finalizar">FINALIZAR COMPRA</button>
     </div>
 </div>
 <div id="carrinho-overlay" onclick="toggleCarrinho()"></div>
 
-<script src="catalago.js" defer></script>
+<script src="detalhes.js"></script>
 </body>
 </html>
