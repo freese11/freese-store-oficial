@@ -1,4 +1,5 @@
-const API = "https://projeto-programador-freese-backend.onrender.com/usuarios";
+const URL_SERVIDOR = "https://projeto-programador-freese-backend.onrender.com";
+const API = `${URL_SERVIDOR}/usuarios`;
 const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
 
 let todosUsuarios = [];
@@ -37,7 +38,6 @@ function filtrar() {
     const texto = document.getElementById("filtro-nome").value.toLowerCase();
 
     const filtrados = todosUsuarios.filter(u => {
-        // Usa a coluna "perfil" que vem do seu banco (adm ou cliente)
         const perfilUser = (u.perfil || "cliente").toLowerCase();
         
         const bateuAba = (perfilUser === abaAtiva);
@@ -60,8 +60,18 @@ function renderizar(lista) {
         const tipoClasse = ehAdm ? 'badge-adm' : 'badge-cliente';
         const tipoTexto = ehAdm ? 'Administrador' : 'Cliente';
         
-        // Se não tiver foto no banco, usa um ícone padrão
-        const urlFoto = u.foto_perfil ? u.foto_perfil : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+        // 👇 MÁGICA DA FOTO ACONTECENDO AQUI 👇
+        let urlFoto = 'https://cdn-icons-png.flaticon.com/512/149/149071.png'; // Foto padrão
+        
+        if (u.foto_perfil) {
+            // Se o link já começar com http (ex: link do google), ele usa normal
+            if (u.foto_perfil.startsWith('http')) {
+                urlFoto = u.foto_perfil;
+            } else {
+                // Se for um upload nosso, ele "cola" o link do Render na frente!
+                urlFoto = URL_SERVIDOR + u.foto_perfil;
+            }
+        }
 
         tabela.innerHTML += `
             <tr>
@@ -100,7 +110,6 @@ function fecharModal() {
     document.getElementById("modal").style.display = "none";
 }
 
-// Preview da imagem antes de salvar
 function previewImagem(event) {
     const file = event.target.files[0];
     if (file) {
@@ -112,11 +121,9 @@ function previewImagem(event) {
     }
 }
 
-// 👇 IMPORTANTE: Salvar usando FormData para suportar a imagem!
 async function salvar() {
     const cod = document.getElementById("codusuario").value;
     
-    // Como o backend usa Multer, PRECISAMOS enviar como FormData (não como JSON)
     const formData = new FormData();
     formData.append("nome", document.getElementById("nome").value);
     formData.append("email", document.getElementById("email").value);
@@ -124,7 +131,6 @@ async function salvar() {
     formData.append("numero", document.getElementById("numero").value);
     formData.append("perfil", document.getElementById("perfil").value);
 
-    // Adiciona o arquivo da foto, se o usuário selecionou alguma
     const inputFoto = document.getElementById("foto");
     if (inputFoto.files.length > 0) {
         formData.append("foto", inputFoto.files[0]);
@@ -138,8 +144,6 @@ async function salvar() {
             method: metodo,
             headers: {
                 "minha-chave": API_KEY
-                // ATENÇÃO: Ao usar FormData, não colocamos o 'Content-Type'. 
-                // O próprio navegador cuida disso para nós automaticamente!
             },
             body: formData
         });
@@ -168,9 +172,18 @@ async function editar(id) {
         document.getElementById("numero").value = u.numero || "";
         document.getElementById("perfil").value = u.perfil || "cliente";
         
-        // Zera o input de arquivo e ajusta a imagem de preview
+        // 👇 ARRUMAMOS O PREVIEW DA FOTO AQUI TAMBÉM 👇
+        let urlFotoModal = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        if (u.foto_perfil) {
+            if (u.foto_perfil.startsWith('http')) {
+                urlFotoModal = u.foto_perfil;
+            } else {
+                urlFotoModal = URL_SERVIDOR + u.foto_perfil;
+            }
+        }
+        
         document.getElementById("foto").value = "";
-        document.getElementById("preview-foto").src = u.foto_perfil ? u.foto_perfil : "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        document.getElementById("preview-foto").src = urlFotoModal;
 
         abrirModal(true); 
     } catch(erro) {
@@ -191,7 +204,7 @@ async function deletar(id) {
             carregar(); 
         } else {
             const dadosErro = await res.json();
-            alert("Erro: " + dadosErro.erro); // Exibe o erro 23503 caso ele tenha vendas registradas
+            alert("Erro: " + dadosErro.erro); 
         }
     } catch(erro) {
         alert("Erro ao excluir o usuário.");
