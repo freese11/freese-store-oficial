@@ -56,3 +56,103 @@ button.deletar { background: #e74c3c; border: none; padding: 6px 12px; color: wh
 .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
 .salvar { background: #27ae60; border: none; padding: 10px 15px; color: white; border-radius: 4px; cursor: pointer; font-weight: bold; }
 .cancelar { background: #aaa; border: none; padding: 10px 15px; color: white; border-radius: 4px; cursor: pointer; }
+
+/* =========================================
+   ESTILO PREMIUM PARA OS MODAIS (Freese Store)
+   ========================================= */
+
+/* Deixa o fundo desfocado e mais moderno */
+.modal {
+    background-color: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(4px); 
+}
+
+/* Arredonda as bordas e melhora o visual da caixinha */
+.modal-content {
+    border-radius: 16px !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important;
+    padding: 35px 25px !important;
+    border: none !important;
+    max-width: 400px !important; /* Deixa o modal mais elegante e não tão largo */
+}
+
+/* Títulos bonitos e em destaque */
+.modal-content h2, #modal-titulo {
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: #111 !important;
+    margin-bottom: 25px !important;
+}
+
+/* Campos de digitar modernos (estilo Apple/Nike) */
+.modal-content input {
+    padding: 14px 16px !important;
+    margin-bottom: 15px !important;
+    border: 1.5px solid #ddd !important;
+    border-radius: 8px !important;
+    font-size: 15px !important;
+    background-color: #fcfcfc !important;
+    transition: all 0.3s ease !important;
+}
+
+.modal-content input:focus {
+    border-color: #111 !important;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05) !important;
+    outline: none !important;
+}
+
+/* =========================================
+   ARRUMANDO OS BOTÕES FEIOS DO PERFIL
+   ========================================= */
+
+/* Todos os botões principais (Salvar Foto, Cadastrar, Entrar) */
+.modal-content button, 
+#modal-perfil button {
+    border-radius: 8px !important;
+    padding: 14px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    cursor: pointer !important;
+    border: none !important; /* Tira aquela borda preta feia */
+    width: 100% !important;
+    transition: all 0.2s ease !important;
+    margin-bottom: 10px !important;
+}
+
+/* Botão de Salvar / Ação Principal (Preto luxo, combinando com a loja) */
+#modal-perfil button:first-of-type,
+.modal-content button[type="submit"],
+.btn-primary {
+    background-color: #111 !important;
+    color: #fff !important;
+}
+#modal-perfil button:first-of-type:hover,
+.modal-content button[type="submit"]:hover {
+    background-color: #333 !important;
+    transform: translateY(-2px);
+}
+
+/* Botão Sair da Conta (Design limpo, borda vermelha suave) */
+#modal-perfil button[onclick="sairConta()"] {
+    background-color: transparent !important;
+    color: #d32f2f !important;
+    border: 2px solid #ffebee !important;
+    margin-top: 5px !important;
+}
+#modal-perfil button[onclick="sairConta()"]:hover {
+    background-color: #fff1f0 !important;
+    border-color: #ffcdd2 !important;
+}
+
+/* Aumenta e deixa a foto de perfil mais bonita no modal */
+#preview-foto-perfil, 
+#preview-foto-registro {
+    width: 120px !important;
+    height: 120px !important;
+    border: 3px solid #eee !important;
+    padding: 3px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+}

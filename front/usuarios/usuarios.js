@@ -2,6 +2,9 @@ const URL_SERVIDOR = "https://projeto-programador-freese-backend.onrender.com";
 const API = `${URL_SERVIDOR}/usuarios`;
 const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
 
+// 👇 Imagem de segurança ultra-forte embutida (Impossível de falhar ou ser apagada)
+const IMG_FALHA_USUARIO = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+
 let todosUsuarios = [];
 let abaAtiva = "cliente"; 
 
@@ -60,22 +63,28 @@ function renderizar(lista) {
         const tipoClasse = ehAdm ? 'badge-adm' : 'badge-cliente';
         const tipoTexto = ehAdm ? 'Administrador' : 'Cliente';
         
-        // 👇 MÁGICA DA FOTO ACONTECENDO AQUI 👇
-        let urlFoto = 'https://cdn-icons-png.flaticon.com/512/149/149071.png'; // Foto padrão
+        // 👇 MÁGICA DA FOTO COM PROTEÇÃO 👇
+        let urlFoto = IMG_FALHA_USUARIO; // Começa com a foto padrão segura
         
         if (u.foto_perfil) {
-            // Se o link já começar com http (ex: link do google), ele usa normal
             if (u.foto_perfil.startsWith('http')) {
                 urlFoto = u.foto_perfil;
             } else {
-                // Se for um upload nosso, ele "cola" o link do Render na frente!
-                urlFoto = URL_SERVIDOR + u.foto_perfil;
+                // Garante que a barra (/) não seja duplicada nem esquecida
+                urlFoto = URL_SERVIDOR + (u.foto_perfil.startsWith('/') ? u.foto_perfil : '/' + u.foto_perfil);
             }
         }
 
+        // Note o onerror na tag img: se o Render apagou, ele mostra o SVG padrão!
         tabela.innerHTML += `
             <tr>
-                <td><img src="${urlFoto}" class="avatar-tabela" alt="Foto"></td>
+                <td>
+                    <img src="${urlFoto}" 
+                         onerror="this.onerror=null; this.src='${IMG_FALHA_USUARIO}';" 
+                         class="avatar-tabela" 
+                         alt="Foto"
+                         style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background-color: #fff; border: 1px solid #ddd;">
+                </td>
                 <td>#${id}</td>
                 <td><strong>${u.nome}</strong></td>
                 <td>${u.email}</td>
@@ -102,7 +111,11 @@ function abrirModal(ehEdicao = false) {
         document.getElementById("numero").value = "";
         document.getElementById("perfil").value = abaAtiva; 
         document.getElementById("foto").value = "";
-        document.getElementById("preview-foto").src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        
+        // Aplica o escudo na foto de preview do modal
+        const imgPreview = document.getElementById("preview-foto");
+        imgPreview.src = IMG_FALHA_USUARIO;
+        imgPreview.onerror = function() { this.onerror=null; this.src=IMG_FALHA_USUARIO; };
     }
 }
 
@@ -173,17 +186,20 @@ async function editar(id) {
         document.getElementById("perfil").value = u.perfil || "cliente";
         
         // 👇 ARRUMAMOS O PREVIEW DA FOTO AQUI TAMBÉM 👇
-        let urlFotoModal = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        let urlFotoModal = IMG_FALHA_USUARIO;
         if (u.foto_perfil) {
             if (u.foto_perfil.startsWith('http')) {
                 urlFotoModal = u.foto_perfil;
             } else {
-                urlFotoModal = URL_SERVIDOR + u.foto_perfil;
+                urlFotoModal = URL_SERVIDOR + (u.foto_perfil.startsWith('/') ? u.foto_perfil : '/' + u.foto_perfil);
             }
         }
         
         document.getElementById("foto").value = "";
-        document.getElementById("preview-foto").src = urlFotoModal;
+        
+        const imgPreview = document.getElementById("preview-foto");
+        imgPreview.src = urlFotoModal;
+        imgPreview.onerror = function() { this.onerror=null; this.src=IMG_FALHA_USUARIO; };
 
         abrirModal(true); 
     } catch(erro) {

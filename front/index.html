@@ -23,7 +23,7 @@
   <input type="text" class="search" id="input-busca" placeholder="O que você está buscando hoje?" />
 
   <div class="acoes">
-      <span id="btn-login-abrir" style="cursor:pointer"><i class="far fa-user"></i> Login</span>
+      <span id="btn-login-abrir" style="cursor:pointer; display: flex; align-items: center;"><i class="far fa-user" style="margin-right: 5px;"></i> Login</span>
       <span class="carrinho" id="abrir-carrinho" style="cursor:pointer">
         <i class="fas fa-shopping-bag"></i> <span id="contador-carrinho">0</span>
       </span>
@@ -105,16 +105,16 @@
         <input type="email" id="email" placeholder="Seu e-mail" required>
         <input type="password" id="senha" placeholder="Sua senha" required>
         <button type="submit" class="btn-primary">ENTRAR NA CONTA</button>
-        <p onclick="voltarSelecao()" class="btn-voltar">Voltar para opções</p>
+        <p onclick="voltarSelecao()" class="btn-voltar" style="text-align: center; margin-top: 15px; cursor: pointer; font-size: 14px; color: #555; text-decoration: underline;">Voltar para opções</p>
       </form>
 
-      <!-- AQUI: FORMULÁRIO DE CRIAR CONTA AGORA COM A FOTO CORRIGIDA -->
+      <!-- FORMULÁRIO DE CRIAR CONTA AGORA LIMPO E MODERNO -->
       <form id="form-registro" class="hidden" onsubmit="registrarCliente(event)">
         
-        <div style="text-align: center; margin-bottom: 15px;">
-            <img id="preview-foto-registro" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc; margin-bottom: 10px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img id="preview-foto-registro" src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid #eee; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
             <br>
-            <label for="reg-foto" style="cursor: pointer; background: #333; color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: bold;">📷 Escolher Foto (Opcional)</label>
+            <label for="reg-foto" style="cursor: pointer; color: #333; font-size: 13px; font-weight: bold; text-decoration: underline;"><i class="fas fa-camera"></i> Escolher Foto (Opcional)</label>
             <input type="file" id="reg-foto" accept="image/*" style="display: none;" onchange="previewImagemRegistro(event)">
         </div>
 
@@ -122,27 +122,30 @@
         <input type="email" id="reg-email" placeholder="E-mail de acesso" required>
         <input type="tel" id="reg-telefone" placeholder="Telefone (WhatsApp)" required>
         <input type="password" id="reg-senha" placeholder="Crie uma senha" required>
-        <button type="submit" class="btn-primary" style="background: #27ae60;">FINALIZAR CADASTRO</button>
-        <p onclick="voltarSelecao()" class="btn-voltar">Já tenho conta? Entrar.</p>
+        <button type="submit" class="btn-primary">FINALIZAR CADASTRO</button>
+        <p onclick="voltarSelecao()" class="btn-voltar" style="text-align: center; margin-top: 15px; cursor: pointer; font-size: 14px; color: #555; text-decoration: underline;">Já tenho conta? Entrar.</p>
       </form>
     </div>
 </div>
 
-<!-- MODAL DE MEU PERFIL -->
+<!-- MODAL DE MEU PERFIL LIMPO E MODERNO -->
 <div id="modal-perfil" class="modal">
     <div class="modal-content" style="text-align: center;">
       <span class="close-modal">&times;</span>
       <h2>Meu Perfil</h2>
       
       <div style="margin: 20px 0;">
-          <img id="preview-foto-perfil" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Sua Foto" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #111; margin-bottom: 15px;">
+          <img id="preview-foto-perfil" src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" alt="Sua Foto" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.15); margin-bottom: 15px;">
           <br>
-          <label for="foto-perfil" class="btn-primary" style="cursor: pointer; padding: 10px 20px; display: inline-block; width: auto; font-size: 14px;">📷 Escolher Nova Foto</label>
+          <label for="foto-perfil" style="cursor: pointer; color: #111; font-size: 14px; font-weight: bold; text-decoration: underline;"><i class="fas fa-camera"></i> Trocar Foto</label>
           <input type="file" id="foto-perfil" accept="image/*" style="display: none;" onchange="previewImagemPerfil(event)">
       </div>
 
-      <button onclick="salvarFotoPerfil()" class="btn-primary" style="background: #27ae60; margin-bottom: 10px;">SALVAR FOTO</button>
-      <button onclick="sairConta()" class="btn-primary" style="background: #e74c3c;">SAIR DA CONTA</button>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 25px;">
+          <button onclick="salvarFotoPerfil()" class="btn-primary">SALVAR FOTO</button>
+          <button onclick="sairConta()" class="btn-sair">SAIR DA CONTA</button>
+      </div>
+
     </div>
 </div>
 
