@@ -1,10 +1,17 @@
+/* =========================================
+   1. GERAL (Fundo e Fonte)
+   ========================================= */
 body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #f4f6f9;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #f8f9fa;
+    color: #333;
+    overflow-x: hidden;
 }
 
-/* HEADER */
+/* =========================================
+   2. TOPBAR (Cabeçalho Escuro)
+   ========================================= */
 .topbar {
     background: #111;
     color: white;
@@ -12,156 +19,347 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.topbar .left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+.topbar .left { 
+    display: flex; 
+    align-items: center; 
+    gap: 20px; 
 }
 
-.topbar h1 {
-    margin: 0;
-    font-size: 20px;
+.topbar h1 { 
+    margin: 0; 
+    font-size: 20px; 
+    font-weight: 700; 
+    text-transform: uppercase;
+    letter-spacing: 0.5px; 
 }
 
 .btn-voltar {
     background: transparent;
-    border: 1px solid #e74c3c;
-    color: #e74c3c;
-    padding: 6px 12px;
+    border: 1px solid #ff4757;
+    color: #ff4757;
+    padding: 8px 16px;
+    border-radius: 6px;
     cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-voltar:hover { 
+    background: #ff4757; 
+    color: white; 
 }
 
 .btn-novo {
-    background: #e74c3c;
+    background: #ff4757;
     border: none;
-    padding: 8px 14px;
+    padding: 10px 18px;
     color: white;
+    border-radius: 6px;
     cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    text-transform: uppercase;
+    font-size: 13px;
+    box-shadow: 0 4px 6px rgba(255, 71, 87, 0.2);
 }
 
-/* FILTROS */
+.btn-novo:hover { 
+    background: #ff6b81; 
+    transform: translateY(-1px); 
+}
+
+/* =========================================
+   3. FILTROS DA TABELA
+   ========================================= */
 .filtros {
-    padding: 20px 30px;
+    padding: 25px 30px 15px 30px;
     display: flex;
     gap: 15px;
 }
 
 .filtros input, .filtros select {
-    padding: 8px;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    min-width: 200px;
+    background: #fff;
+    transition: 0.3s;
 }
 
-/* TABELA */
-.tabela-container {
-    padding: 0 30px 30px 30px;
+.filtros input:focus, .filtros select:focus { 
+    border-color: #111; 
+    box-shadow: 0 0 0 3px rgba(17,17,17,0.05); 
+}
+
+/* =========================================
+   4. TABELA DE PRODUTOS / USUÁRIOS
+   ========================================= */
+.tabela-container { 
+    padding: 0 30px 30px 30px; 
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     background: white;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
 
 th {
-    background: #222;
+    background: #1a1a1a;
     color: white;
-    padding: 12px;
+    padding: 16px 15px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 td {
-    padding: 12px;
+    padding: 15px;
     text-align: center;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f1f1f1;
+    vertical-align: middle;
+    font-size: 14px;
+    color: #444;
 }
 
-tr:hover {
-    background: #f9f9f9;
-}
+tr:hover { background: #fcfcfc; }
 
+/* Imagens na Tabela */
 td img {
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: 50%; /* Deixa a foto redonda na tabela */
+    border: 2px solid #eaeaea;
 }
 
-/* STATUS */
+/* Botões de Ação na Tabela */
+button.editar { 
+    background: #eab308; 
+    border: none; 
+    padding: 8px 14px; 
+    color: white; 
+    cursor: pointer; 
+    border-radius: 6px; 
+    margin-right: 5px; 
+    font-weight: bold; 
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+button.deletar { 
+    background: #ef4444; 
+    border: none; 
+    padding: 8px 14px; 
+    color: white; 
+    cursor: pointer; 
+    border-radius: 6px; 
+    font-weight: bold; 
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+/* =========================================
+   5. ETIQUETAS DE STATUS (CORRIGIDO)
+   ========================================= */
 .status-ativo {
-    color: green;
-    font-weight: bold;
+    background: #e3fbed;
+    color: #15803d;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 800;
+    display: inline-block; /* O segredo para não esticar! */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 .status-inativo {
-    color: red;
-    font-weight: bold;
+    background: #fef2f2;
+    color: #b91c1c;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 800;
+    display: inline-block; /* O segredo para não esticar! */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
-/* BOTÕES */
-button.editar {
-    background: #3498db;
-    border: none;
-    padding: 6px 10px;
-    color: white;
-    cursor: pointer;
-}
-
-button.deletar {
-    background: #e74c3c;
-    border: none;
-    padding: 6px 10px;
-    color: white;
-    cursor: pointer;
-}
-
-/* MODAL */
+/* =========================================
+   6. MODAL CENTRALIZADO (CORRIGIDO)
+   ========================================= */
 .modal {
-    display: none;
+    display: none; /* Seu JS abre mudando isso */
     position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
+    inset: 0; /* Substitui top/left/right/bottom 0 */
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 9999;
+    padding: 20px;
+    overflow-y: auto; /* Permite rolar a tela se faltar espaço */
+    box-sizing: border-box;
+    backdrop-filter: blur(4px);
 }
 
 .modal-content {
     background: white;
-    width: 420px;
-    margin: 50px auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    border-radius: 8px;
-}
-
-.modal-content input, 
-.modal-content select {
-    padding: 8px;
-}
-
-.preview-img {
     width: 100%;
-    height: 150px;
-    object-fit: contain;
-    border: 1px solid #ddd;
-    display: none;
+    max-width: 450px;
+    margin: 4vh auto !important; /* Força o modal a ficar no meio exato da tela */
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    position: relative;
+    box-sizing: border-box;
 }
 
+/* Textos e Labels dentro do Modal */
+.modal-content h2 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    color: #111;
+    text-align: center;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.modal-content label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 6px;
+    margin-top: 15px;
+}
+
+/* Inputs do Modal para não vazarem */
+.modal-content input, 
+.modal-content select, 
+.modal-content textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box; /* Previne que o input quebre a largura */
+    background: #fff;
+    transition: 0.2s;
+    font-family: inherit;
+    color: #111;
+}
+
+.modal-content input:focus, 
+.modal-content select:focus {
+    border-color: #111;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(17,17,17,0.1);
+}
+
+/* Imagem de Perfil dentro do Modal (baseado no seu print) */
+.preview-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%; /* Deixa a foto perfeitamente redonda */
+    border: 3px solid #f1f1f1;
+    margin: 0 auto 15px auto;
+    display: block;
+}
+
+.escolher-foto-btn {
+    display: block;
+    margin: 0 auto 20px auto;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Botões de Salvar/Cancelar no Modal */
 .modal-buttons {
     display: flex;
-    justify-content: space-between;
+    gap: 12px;
+    margin-top: 25px;
 }
 
-.salvar {
-    background: #27ae60;
+.modal-buttons button {
+    flex: 1;
+    padding: 14px;
     border: none;
-    padding: 8px 12px;
-    color: white;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.2s;
 }
 
-.cancelar {
-    background: #aaa;
-    border: none;
-    padding: 8px 12px;
+.salvar { 
+    background: #111; 
+    color: white; 
+}
+.salvar:hover { background: #333; }
+
+.cancelar { 
+    background: #e5e5e5; 
+    color: #333; 
+}
+.cancelar:hover { background: #d4d4d4; }
+
+/* =========================================
+   7. RESPONSIVIDADE (Celular)
+   ========================================= */
+@media (max-width: 768px) {
+    .topbar { 
+        flex-wrap: wrap; 
+        padding: 20px 15px; 
+        gap: 15px; 
+    }
+    
+    .topbar .left { display: contents; }
+    
+    .topbar h1 { 
+        width: 100%; 
+        order: 1; 
+        text-align: center; 
+        margin-bottom: 5px; 
+    }
+    
+    .btn-voltar { order: 2; flex: 1; text-align: center; }
+    .btn-novo { order: 3; flex: 1; text-align: center; }
+
+    .filtros { 
+        padding: 20px 15px; 
+        flex-direction: column; 
+    }
+    .filtros input, .filtros select { width: 100%; }
+    
+    .tabela-container { 
+        padding: 0 15px 30px 15px; 
+    }
+    
+    /* Scroll horizontal na tabela para não quebrar a tela */
+    .tabela-container table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    th, td { padding: 12px 15px; }
 }

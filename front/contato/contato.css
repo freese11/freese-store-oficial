@@ -1,10 +1,10 @@
 /* ============================================================
-   1. CONFIGURAÇÕES GERAIS E CORES (Padrão Index)
+   1. CONFIGURAÇÕES GERAIS E CORES (Padrão Unificado)
    ============================================================ */
 :root {
     --premium-red: #a70101;
     --dark: #111;
-    --light-gray: #f9f9f9;
+    --light-gray: #f8f9fa;
     --white: #ffffff;
     --transition: 0.3s ease;
 }
@@ -13,16 +13,17 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
 body {
-    background: #f5f5f5;
+    background: #f5f5f7;
     color: var(--dark);
+    overflow-x: hidden;
 }
 
 /* ============================================================
-   2. HEADER, NAV E TOP BAR (Padrão Index)
+   2. HEADER, NAV E TOP BAR (Padrão Unificado)
    ============================================================ */
 .top-bar {
     background: #000;
@@ -30,46 +31,58 @@ body {
     display: flex;
     justify-content: center;
     gap: 40px;
-    padding: 8px;
+    padding: 10px;
     font-size: 12px;
     letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
 }
 
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 70px;
+    padding: 15px 5%;
     background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    flex-wrap: wrap; 
+    gap: 15px;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.logo img {
-    height: 90px;
-    width: auto;
-    object-fit: contain;
-}
+.logo { display: flex; align-items: center; cursor: pointer; }
+.logo img { height: 60px; width: auto; object-fit: contain; }
 
 .search {
-    width: 40%;
-    padding: 12px 20px;
-    border-radius: 25px;
+    flex-grow: 1;
+    max-width: 400px;
+    padding: 12px 25px;
+    border-radius: 50px;
     border: 1px solid #ddd;
+    background: var(--light-gray);
     outline: none;
     font-size: 14px;
+    transition: var(--transition);
+}
+
+.search:focus {
+    border-color: var(--dark);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(17,17,17,0.05);
 }
 
 .acoes { 
     display: flex; 
     gap: 20px; 
     align-items: center; 
-    font-weight: bold; 
+    font-weight: 700; 
+    font-size: 14px;
 }
+
+.acoes span { cursor: pointer; transition: var(--transition); }
+.acoes span:hover { color: var(--premium-red); }
 
 .menu {
     display: flex;
@@ -85,9 +98,17 @@ body {
     color: #000; 
     font-weight: bold; 
     padding-bottom: 5px; 
+    transition: var(--transition);
+    font-size: 16px; 
+    text-transform: none; 
 }
 
-.menu a.active { border-bottom: 2px solid var(--premium-red); }
+.menu a:hover { color: var(--premium-red); }
+
+.menu a.active { 
+    color: #000;
+    border-bottom: 2px solid var(--premium-red); 
+}
 
 /* ============================================================
    3. CONTEÚDO EXCLUSIVO DA PÁGINA DE CONTATO
@@ -95,7 +116,7 @@ body {
 .contato-container {
     max-width: 1200px;
     margin: 60px auto;
-    padding: 0 20px;
+    padding: 0 5%;
 }
 
 .contato-header {
@@ -107,6 +128,7 @@ body {
     font-size: 48px;
     font-weight: 900;
     letter-spacing: -1px;
+    text-transform: uppercase;
 }
 
 .contato-header span { color: var(--premium-red); }
@@ -117,7 +139,6 @@ body {
     gap: 40px;
 }
 
-/* Cards de Informação */
 .contato-info {
     display: flex;
     flex-direction: column;
@@ -128,11 +149,15 @@ body {
     background: #fff;
     padding: 30px;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     transition: var(--transition);
+    border: 1px solid #eee;
 }
 
-.info-card:hover { transform: translateY(-5px); }
+.info-card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08); 
+}
 
 .info-card i {
     font-size: 24px;
@@ -145,149 +170,109 @@ body {
     color: #666;
     margin-bottom: 5px;
     letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 800;
 }
 
 .info-card p {
     font-size: 18px;
     font-weight: 700;
+    color: var(--dark);
 }
 
-/* Formulário */
 .contato-form {
     background: #fff;
     padding: 40px;
     border-radius: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    border: 1px solid #eee;
 }
 
-.input-group {
-    margin-bottom: 20px;
-}
+.input-group { margin-bottom: 20px; }
 
 .input-group label {
     display: block;
-    font-size: 11px;
-    font-weight: 900;
+    font-size: 12px;
+    font-weight: 800;
     margin-bottom: 8px;
     color: var(--dark);
+    text-transform: uppercase;
 }
 
-/* Campos do formulário com estilo ajustado para não conflitar com modais */
 .contato-form input, 
 .contato-form select, 
 .contato-form textarea {
     width: 100%;
     padding: 15px;
-    border: 1px solid #eee;
+    border: 1px solid #ddd;
     border-radius: 12px;
     background: #fcfcfc;
     outline: none;
     transition: var(--transition);
+    font-size: 14px;
 }
 
 .contato-form input:focus, 
 .contato-form textarea:focus {
-    border-color: var(--premium-red);
+    border-color: var(--dark);
     background: #fff;
-    box-shadow: 0 0 0 4px rgba(167, 1, 1, 0.05);
+    box-shadow: 0 0 0 3px rgba(17,17,17,0.05);
 }
 
 .btn-enviar {
     width: 100%;
     padding: 18px;
-    background: #000;
+    background: var(--dark);
     color: #fff;
     border: none;
     border-radius: 12px;
     font-weight: 900;
     cursor: pointer;
     transition: var(--transition);
+    text-transform: uppercase;
+    margin-top: 10px;
 }
 
 .btn-enviar:hover {
     background: var(--premium-red);
-    transform: scale(1.02);
+    transform: translateY(-2px);
 }
 
 /* ============================================================
-   4. MODAL (LOGIN, REGISTRO E PERFIL) - IDÊNTICO AO INDEX
+   4. MODAIS (LOGIN, REGISTRO E PERFIL) - Padrão Unificado
    ============================================================ */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 3000; 
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85); 
-    backdrop-filter: blur(8px); 
-    animation: fadeIn 0.3s ease;
+    display: none; position: fixed; z-index: 3000; inset: 0;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); 
+    padding: 20px; box-sizing: border-box; overflow-y: auto;
 }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
 .modal-content {
-    background: #fff;
-    margin: 6% auto; 
-    padding: 40px;
-    width: 100%;
-    max-width: 420px;
-    border-radius: 20px; 
-    text-align: center;
-    position: relative;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    animation: slideUp 0.4s ease-out;
+    background: #fff; margin: 5vh auto; padding: 40px; width: 100%; max-width: 420px;
+    border-radius: 20px; text-align: center; position: relative;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3); box-sizing: border-box;
 }
-
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-.close-modal { 
-    position: absolute; right: 20px; top: 15px; 
-    font-size: 28px; cursor: pointer; color: #999; transition: 0.3s;
-}
+.close-modal { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #999; }
 .close-modal:hover { color: #000; }
-
 #modal-titulo { font-weight: 900; text-transform: uppercase; margin-bottom: 25px; }
-
 .login-options { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
-
-.btn-opt { 
-    padding: 15px; border: 2px solid #e0e0e0; background: #fff; 
-    cursor: pointer; font-weight: bold; border-radius: 10px;
-    transition: all 0.3s ease; font-size: 14px;
-}
-.btn-opt:hover { border-color: #000; background: #f9f9f9; transform: translateY(-2px); }
-
+.btn-opt { padding: 15px; border: 2px solid #e0e0e0; background: #fff; cursor: pointer; font-weight: bold; border-radius: 10px; font-size: 14px; }
+.btn-opt:hover { border-color: #000; background: #f9f9f9; }
 .btn-admin { border-color: #fceaea; color: var(--premium-red); }
 .btn-admin:hover { background: #fceaea; border-color: var(--premium-red); }
-
 #form-login, #form-registro { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-
-#form-login input, #form-registro input {
-    width: 100%; padding: 14px 18px; border: 1px solid #ddd;
-    border-radius: 10px; background: #f9f9f9; outline: none;
-    transition: 0.3s; font-size: 14px;
-}
-#form-login input:focus, #form-registro input:focus { 
-    border-color: var(--premium-red); background: #fff; box-shadow: 0 0 0 4px rgba(167, 1, 1, 0.1); 
-}
-
-.btn-primary, .btn-sair {
-    width: 100%; padding: 16px; font-weight: bold; border: none;
-    border-radius: 10px; cursor: pointer; transition: all 0.3s ease;
-    text-transform: uppercase; font-size: 14px; margin-bottom: 5px;
-}
-.btn-primary { background: #000; color: #fff; }
-.btn-primary:hover { background: var(--premium-red); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(167, 1, 1, 0.3); }
-
+.modal-content input { width: 100%; padding: 14px 18px; border: 1px solid #ddd; border-radius: 10px; background: #f9f9f9; outline: none; font-size: 14px; box-sizing: border-box; }
+.modal-content input:focus { border-color: var(--dark); background: #fff; }
+.btn-primary, .btn-sair { width: 100%; padding: 16px; font-weight: 800; border: none; border-radius: 10px; cursor: pointer; text-transform: uppercase; font-size: 14px; margin-bottom: 5px; }
+.btn-primary { background: var(--dark); color: #fff; }
+.btn-primary:hover { background: #333; }
 .btn-sair { background: #fff; color: #111; border: 2px solid #eee; }
-.btn-sair:hover { background: #fceaea; color: var(--premium-red); border-color: var(--premium-red); transform: translateY(-2px); }
-
-.btn-voltar { font-size: 12px; margin-top: 10px; cursor: pointer; text-decoration: underline; color: #888; transition: 0.3s; }
+.btn-sair:hover { background: #fceaea; color: var(--premium-red); border-color: var(--premium-red); }
+.btn-voltar { font-size: 12px; margin-top: 10px; cursor: pointer; text-decoration: underline; color: #888; }
 .btn-voltar:hover { color: #000; }
 .hidden { display: none !important; }
 
 /* ============================================================
-   5. CARRINHO LATERAL (IDÊNTICO AO INDEX)
+   5. CARRINHO LATERAL - Padrão Unificado
    ============================================================ */
 .carrinho-sidebar {
     position: fixed;
@@ -296,7 +281,7 @@ body {
     width: 380px;
     height: 100%;
     background: #fff;
-    z-index: 3000;
+    z-index: 4000;
     transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     display: flex;
     flex-direction: column;
@@ -311,17 +296,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: normal;
+    text-transform: none;
 }
 
 .fechar-carrinho { cursor: pointer; font-size: 24px; }
-
 .carrinho-itens-lista { flex-grow: 1; overflow-y: auto; padding: 20px; }
-
 .item-no-carrinho { display: flex; gap: 15px; padding: 15px; border-bottom: 1px solid #f5f5f5; align-items: center; }
-.item-no-carrinho img { width: 70px; height: 70px; object-fit: contain; }
-
+.item-no-carrinho img { width: 70px; height: 70px; object-fit: contain; border-radius: 0; }
 .carrinho-footer { padding: 30px; border-top: 1px solid #eee; background: #fcfcfc; }
-
 .total-container { display: flex; justify-content: space-between; font-size: 22px; font-weight: 900; margin-bottom: 20px; }
 
 #btn-finalizar-compra {
@@ -334,24 +317,14 @@ body {
     border-radius: 12px;
     cursor: pointer;
     text-transform: uppercase;
-    transition: var(--transition);
+    transition: 0.3s ease;
 }
 
-#btn-finalizar-compra:hover {
-    background: #219150;
-}
-
-#carrinho-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.4);
-    z-index: 2999;
-}
+#btn-finalizar-compra:hover { background: #219150; }
+#carrinho-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 2999; }
 
 /* ============================================================
-   6. FOOTER (Padrão Index)
+   6. FOOTER (Padrão Unificado)
    ============================================================ */
 .footer-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -362,9 +335,58 @@ body {
 .footer-logo { height: 60px; margin-bottom: 20px; filter: grayscale(1); }
 .footer-bottom { text-align: center; padding: 20px; background: #000; color: #555; font-size: 12px; }
 
-/* Responsividade Básica para a página de contato */
+/* ============================================================
+   7. RESPONSIVIDADE PARA CELULAR (AGORA VAI FICAR PERFEITO!)
+   ============================================================ */
 @media (max-width: 768px) {
-    .contato-grid { grid-template-columns: 1fr; }
-    .header { padding: 20px; flex-direction: column; gap: 15px;}
-    .search { width: 100%; }
+    .top-bar { display: none; } 
+    
+    /* Ativando flexbox para organizar Header no celular */
+    .header { 
+        padding: 15px; 
+        display: flex;
+        flex-wrap: wrap; /* Muito importante para a busca ir para baixo */
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* REGRAS DE ORDEM PARA FICAR IGUAL AO CATÁLOGO */
+    .logo { order: 1; }
+    .logo img { height: 45px; }
+    
+    .acoes { order: 2; } /* Login/Perfil e Carrinho vão para o topo direito */
+    
+    .search { 
+        order: 3; /* Barra de pesquisa desce de linha */
+        width: 100%; 
+        max-width: 100%; 
+        margin-top: 15px; 
+    }
+    
+    /* Menu fora do Header continua igual */
+    .menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        padding: 15px 10px;
+        font-size: 14px;
+    }
+
+    /* Carrinho Lateral em tela cheia */
+    .carrinho-sidebar {
+        width: 100%;
+        right: -100%;
+    }
+
+    /* Ajustes específicos do formulário de contato no celular */
+    .contato-container { padding: 0 15px; margin: 30px auto; }
+    .contato-header { margin-bottom: 30px; }
+    .contato-header h1 { font-size: 32px; }
+    .contato-grid { grid-template-columns: 1fr; gap: 30px; }
+    .contato-form { padding: 25px 20px; }
+    
+    /* Footer */
+    .footer-grid { grid-template-columns: 1fr; text-align: center; gap: 30px; padding: 40px 20px; }
+    .footer-logo { margin: 0 auto 15px auto; }
 }

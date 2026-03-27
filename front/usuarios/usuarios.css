@@ -1,9 +1,15 @@
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+   ========================================= */
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: #f4f6f9;
 }
 
+/* =========================================
+   BARRA SUPERIOR (TOPBAR) E BOTÕES
+   ========================================= */
 .topbar {
     background: #111;
     color: white;
@@ -16,23 +22,70 @@ body {
 .topbar .left { display: flex; align-items: center; gap: 20px; }
 .topbar h1 { margin: 0; font-size: 20px; }
 
-.btn-voltar { background: transparent; border: 1px solid #e74c3c; color: #e74c3c; padding: 6px 12px; cursor: pointer; border-radius: 4px; }
-.btn-novo { background: #e74c3c; border: none; padding: 8px 14px; color: white; cursor: pointer; border-radius: 4px; font-weight: bold; }
+.btn-voltar { 
+    background: transparent; 
+    border: 1px solid #e74c3c; 
+    color: #e74c3c; 
+    padding: 6px 12px; 
+    cursor: pointer; 
+    border-radius: 4px; 
+    transition: 0.3s;
+}
+.btn-voltar:hover { background: rgba(231, 76, 60, 0.1); }
 
-.abas-container { padding: 20px 30px 0 30px; display: flex; gap: 5px; border-bottom: 2px solid #ddd; }
-.btn-aba { padding: 10px 20px; background: #e0e0e0; border: none; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 16px; color: #555; transition: 0.3s; }
+.btn-novo { 
+    background: #e74c3c; 
+    border: none; 
+    padding: 8px 14px; 
+    color: white; 
+    cursor: pointer; 
+    border-radius: 4px; 
+    font-weight: bold; 
+    transition: 0.3s;
+}
+.btn-novo:hover { background: #c0392b; }
+
+/* =========================================
+   ABAS E FILTROS
+   ========================================= */
+.abas-container { 
+    padding: 20px 30px 0 30px; 
+    display: flex; 
+    gap: 5px; 
+    border-bottom: 2px solid #ddd; 
+}
+
+.btn-aba { 
+    padding: 10px 20px; 
+    background: #e0e0e0; 
+    border: none; 
+    border-radius: 8px 8px 0 0; 
+    cursor: pointer; 
+    font-size: 16px; 
+    color: #555; 
+    transition: 0.3s; 
+}
 .btn-aba.ativo { background: #111; color: white; font-weight: bold; }
 
 .filtros { padding: 15px 30px; display: flex; gap: 15px; }
 .filtros input { padding: 10px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
 
+/* =========================================
+   TABELA DE USUÁRIOS/CLIENTES
+   ========================================= */
 .tabela-container { padding: 0 30px 30px 30px; }
-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    background: white; 
+    border-radius: 8px; 
+    overflow: hidden; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+}
 th { background: #222; color: white; padding: 15px 12px; text-align: left; }
 td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; vertical-align: middle; }
 tr:hover { background: #f9f9f9; }
 
-/* FOTOS DE PERFIL REDONDAS NA TABELA */
 .avatar-tabela { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 1px solid #ccc; }
 
 .badge-adm { background: #111; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
@@ -41,118 +94,242 @@ tr:hover { background: #f9f9f9; }
 button.editar { background: #f39c12; border: none; padding: 6px 12px; color: white; cursor: pointer; border-radius: 4px; margin-right: 5px; }
 button.deletar { background: #e74c3c; border: none; padding: 6px 12px; color: white; cursor: pointer; border-radius: 4px; }
 
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; }
-.modal-content { background: white; width: 400px; margin: 30px auto; padding: 25px; display: flex; flex-direction: column; gap: 10px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
-.modal-content h2 { margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-.modal-content label { font-size: 13px; font-weight: bold; color: #555; margin-bottom: -5px; }
-.modal-content input, .modal-content select { padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
-
-/* ÁREA DE UPLOAD DA FOTO */
-.foto-upload-container { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 10px; }
-.avatar-preview { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd; }
-.btn-upload { background: #eee; border: 1px solid #ccc; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-.btn-upload:hover { background: #ddd; }
-
-.modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
-.salvar { background: #27ae60; border: none; padding: 10px 15px; color: white; border-radius: 4px; cursor: pointer; font-weight: bold; }
-.cancelar { background: #aaa; border: none; padding: 10px 15px; color: white; border-radius: 4px; cursor: pointer; }
-
 /* =========================================
-   ESTILO PREMIUM PARA OS MODAIS (Freese Store)
+   MODAL PREMIUM E DEFINITIVO (FREESE STORE)
    ========================================= */
-
-/* Deixa o fundo desfocado e mais moderno */
 .modal {
-    background-color: rgba(0, 0, 0, 0.75) !important;
-    backdrop-filter: blur(4px); 
+    display: none; 
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 1000;
+    align-items: center; 
+    justify-content: center;
+    padding: 20px; 
+    backdrop-filter: blur(4px);
 }
 
-/* Arredonda as bordas e melhora o visual da caixinha */
 .modal-content {
-    border-radius: 16px !important;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important;
-    padding: 35px 25px !important;
-    border: none !important;
-    max-width: 400px !important; /* Deixa o modal mais elegante e não tão largo */
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px; 
+    padding: 30px 25px;
+    border-radius: 16px; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 90vh; 
+    overflow-y: auto;
+    box-sizing: border-box;
+    border: none;
+    margin: 0;
 }
 
-/* Títulos bonitos e em destaque */
-.modal-content h2, #modal-titulo {
-    font-weight: 800 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    color: #111 !important;
-    margin-bottom: 25px !important;
+.modal-content h2 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #111;
+    text-align: center;
+    letter-spacing: 0.5px;
+    border-bottom: none;
 }
 
-/* Campos de digitar modernos (estilo Apple/Nike) */
-.modal-content input {
-    padding: 14px 16px !important;
-    margin-bottom: 15px !important;
-    border: 1.5px solid #ddd !important;
-    border-radius: 8px !important;
-    font-size: 15px !important;
-    background-color: #fcfcfc !important;
-    transition: all 0.3s ease !important;
+/* ÁREA DE FOTO (MODAL) */
+.foto-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0; 
 }
 
-.modal-content input:focus {
-    border-color: #111 !important;
-    box-shadow: 0 0 0 3px rgba(0,0,0,0.05) !important;
-    outline: none !important;
+.avatar-preview, #preview-foto-perfil, #preview-foto-registro {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f4f4f4;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
-/* =========================================
-   ARRUMANDO OS BOTÕES FEIOS DO PERFIL
-   ========================================= */
-
-/* Todos os botões principais (Salvar Foto, Cadastrar, Entrar) */
-.modal-content button, 
-#modal-perfil button {
-    border-radius: 8px !important;
-    padding: 14px !important;
-    font-size: 14px !important;
-    font-weight: 800 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    cursor: pointer !important;
-    border: none !important; /* Tira aquela borda preta feia */
-    width: 100% !important;
-    transition: all 0.2s ease !important;
-    margin-bottom: 10px !important;
+.btn-upload, .foto-upload-container input[type="file"] {
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    width: auto; 
+    max-width: 200px;
 }
 
-/* Botão de Salvar / Ação Principal (Preto luxo, combinando com a loja) */
-#modal-perfil button:first-of-type,
-.modal-content button[type="submit"],
-.btn-primary {
-    background-color: #111 !important;
-    color: #fff !important;
-}
-#modal-perfil button:first-of-type:hover,
-.modal-content button[type="submit"]:hover {
-    background-color: #333 !important;
-    transform: translateY(-2px);
+.btn-upload:hover, .foto-upload-container input[type="file"]:hover { background: #eee; }
+
+/* INPUTS E LABELS DO MODAL */
+.modal-content label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #555;
+    margin-bottom: -5px; 
 }
 
-/* Botão Sair da Conta (Design limpo, borda vermelha suave) */
+.modal-content input, .modal-content select {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fcfcfc;
+    box-sizing: border-box; 
+    transition: all 0.3s ease;
+}
+
+.modal-content input:focus, .modal-content select:focus {
+    border-color: #111;
+    background: #fff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+}
+
+/* BOTÕES DE AÇÃO DO MODAL */
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.modal-buttons button, #modal-perfil button {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.salvar, #modal-perfil button:first-of-type, .btn-primary {
+    background: #111;
+    color: white;
+}
+.salvar:hover, #modal-perfil button:first-of-type:hover { background: #333; transform: translateY(-2px); }
+
+.cancelar {
+    background: #e0e0e0;
+    color: #333;
+}
+.cancelar:hover { background: #d0d0d0; }
+
 #modal-perfil button[onclick="sairConta()"] {
-    background-color: transparent !important;
-    color: #d32f2f !important;
-    border: 2px solid #ffebee !important;
-    margin-top: 5px !important;
+    background-color: transparent;
+    color: #d32f2f;
+    border: 2px solid #ffebee;
+    margin-top: 5px;
 }
 #modal-perfil button[onclick="sairConta()"]:hover {
-    background-color: #fff1f0 !important;
-    border-color: #ffcdd2 !important;
+    background-color: #fff1f0;
+    border-color: #ffcdd2;
 }
 
-/* Aumenta e deixa a foto de perfil mais bonita no modal */
-#preview-foto-perfil, 
-#preview-foto-registro {
-    width: 120px !important;
-    height: 120px !important;
-    border: 3px solid #eee !important;
-    padding: 3px !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+/* ============================================================
+   RESPONSIVIDADE (MOBILE) - PAINEL DE ADMINISTRAÇÃO
+   ============================================================ */
+@media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden;
+        width: 100vw;
+    }
+
+    /* 2. Topbar - Layout Inteligente (Título no topo, Botões lado a lado) */
+    .topbar {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 20px 15px;
+        gap: 12px;
+        justify-content: space-between;
+    }
+
+    .topbar .left {
+        display: contents; /* Truque Ninja: Ignora a div .left e gerencia os filhos direto */
+    }
+
+    .topbar h1 { 
+        width: 100%;
+        order: 1; /* Joga o título para a primeira linha */
+        font-size: 22px; 
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .btn-voltar {
+        order: 2; /* Joga para baixo do título (esquerda) */
+        flex: 1; /* Divide o espaço 50/50 */
+        padding: 12px 5px;
+        font-size: 14px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .btn-novo {
+        order: 3; /* Joga para baixo do título (direita) */
+        flex: 1; /* Divide o espaço 50/50 */
+        padding: 12px 5px;
+        font-size: 14px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .abas-container {
+        padding: 15px 15px 0 15px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    .btn-aba {
+        white-space: nowrap; 
+        padding: 12px 25px;
+        font-size: 15px;
+    }
+
+    .filtros { padding: 20px 15px; }
+    .filtros input {
+        width: 100%;
+        padding: 14px;
+        font-size: 15px;
+        box-sizing: border-box;
+    }
+
+    .tabela-container {
+        padding: 0 15px 30px 15px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .tabela-container table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap; 
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+        border: 1px solid #eee;
+    }
+
+    th, td { padding: 15px 20px; }
+
+    button.editar, button.deletar {
+        padding: 10px 15px;
+        font-size: 13px;
+        border-radius: 6px;
+    }
 }

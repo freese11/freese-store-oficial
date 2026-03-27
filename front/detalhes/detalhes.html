@@ -14,18 +14,24 @@
     <span><i class="fas fa-truck"></i> FRETE GRÁTIS EM COMPRAS ACIMA DE R$ 499</span>
 </div>
 
+<!-- CABEÇALHO PADRÃO (COM A BUSCA) -->
 <header class="header">
   <div class="logo" onclick="window.location.href='/index.html'">
       <img src="/midias/freese2.png" alt="Freese Store">
   </div>
+  
+  <!-- 👇 A barra de pesquisa adicionada de volta 👇 -->
+  <input type="text" class="search" placeholder="Buscar por modelo ou marca...">
+  
   <div class="acoes">
       <span id="btn-login-abrir" style="cursor:pointer"><i class="far fa-user"></i> Login</span>
-      <span class="carrinho" id="abrir-carrinho" style="cursor:pointer" onclick="toggleCarrinho(true)">
+      <span class="carrinho" id="abrir-carrinho" style="cursor:pointer; margin-left: 15px;" onclick="toggleCarrinho(true)">
         <i class="fas fa-shopping-bag"></i> <span id="contador-carrinho">0</span>
       </span>
   </div>
 </header>
 
+<!-- MENU FORA DO HEADER (PERFEITO!) -->
 <nav class="menu">
   <a href="/index.html">Início</a>
   <a href="/catalago/catalago.html" class="active">Catálogo</a>
@@ -33,16 +39,16 @@
 </nav>
 
 <main class="conteudo-detalhes">
-    <div class="botao-voltar" onclick="window.location.href='/catalago/catalago.html'">
+    <a href="/catalago/catalago.html" class="botao-voltar">
         <i class="fas fa-arrow-left"></i> Voltar ao Catálogo
-    </div>
+    </a>
 
     <div class="produto-wrapper" id="produto-wrapper">
         <h2 style="text-align: center; width: 100%;">Carregando detalhes do produto...</h2>
     </div>
 </main>
 
-<!-- MODAL DE LOGIN E REGISTRO -->
+<!-- MODAIS (LOGIN, REGISTRO E PERFIL) -->
 <div id="modal-login" class="modal">
     <div class="modal-content">
       <span class="close-modal" onclick="this.closest('.modal').style.display='none'">&times;</span>
@@ -62,7 +68,6 @@
         <p onclick="voltarSelecao()" class="btn-voltar">Voltar</p>
       </form>
 
-      <!-- FORMULÁRIO DE REGISTRO IGUAL -->
       <form id="form-registro" class="hidden" onsubmit="registrarCliente(event)">
         <div style="text-align: center; margin-bottom: 20px;">
             <img id="preview-foto-registro" src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid #eee; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
@@ -75,13 +80,12 @@
         <input type="email" id="reg-email" placeholder="E-mail" required>
         <input type="tel" id="reg-telefone" placeholder="WhatsApp" required>
         <input type="password" id="reg-senha" placeholder="Senha" required>
-        <button type="submit" class="btn-primary">FINALIZAR CADASTRO</button>
+        <button type="submit" class="btn-primary" style="background: #27ae60;">FINALIZAR CADASTRO</button>
         <p onclick="voltarSelecao()" class="btn-voltar">Já tem conta? Entrar.</p>
       </form>
     </div>
 </div>
 
-<!-- 👇 MODAL DE MEU PERFIL (ESTAVA FALTANDO!) 👇 -->
 <div id="modal-perfil" class="modal">
     <div class="modal-content" style="text-align: center;">
       <span class="close-modal" onclick="this.closest('.modal').style.display='none'">&times;</span>
@@ -114,10 +118,37 @@
             <span>Total:</span>
             <span id="valor-total-carrinho">R$ 0,00</span>
         </div>
-        <button id="btn-finalizar-compra" onclick="window.location.href='/checkout/checkout.html'" class="btn-finalizar">FINALIZAR COMPRA</button>
+        <button id="btn-finalizar-compra" onclick="window.location.href='/checkout/checkout.html'">FINALIZAR COMPRA</button>
     </div>
 </div>
 <div id="carrinho-overlay" onclick="toggleCarrinho()"></div>
+
+<!-- 👇 RODAPÉ (FOOTER) ADICIONADO DE VOLTA 👇 -->
+<footer class="footer">
+    <div class="footer-grid">
+        <div class="footer-col">
+            <img src="/midias/freese2.png" alt="Logo" class="footer-logo">
+            <p>A cultura sneaker levada a sério. Estilo urban para quem não aceita o comum.</p>
+        </div>
+        <div class="footer-col">
+            <h3>INSTITUCIONAL</h3>
+            <a href="#">Sobre Nós</a>
+            <a href="#">Políticas de Privacidade</a>
+            <a href="#">Termos de Uso</a>
+        </div>
+        <div class="footer-col">
+            <h3>SOCIAL</h3>
+            <div class="social-icons">
+                <i class="fab fa-instagram" style="font-size: 24px; margin-right: 15px; cursor: pointer;"></i>
+                <i class="fab fa-facebook" style="font-size: 24px; margin-right: 15px; cursor: pointer;"></i>
+                <i class="fab fa-tiktok" style="font-size: 24px; cursor: pointer;"></i>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        © 2026 Freese Store - Urban Style & Premium Comfort
+    </div>
+</footer>
 
 <script src="detalhes.js"></script>
 </body>

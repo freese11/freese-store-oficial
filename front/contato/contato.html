@@ -10,15 +10,15 @@
 </head>
 <body>
 
+<!-- CABEÇALHO CORRIGIDO -->
 <header class="header">
   <div class="logo" onclick="window.location.href='/index.html'">
       <img src="/midias/freese2.png" alt="Freese Store">
   </div>
- <nav class="menu">
-  <a href="/index.html">Início</a>
-  <a href="/catalago/catalago.html">Catálogo</a>
-  <a href="/contato/contato.html" class="active">Contato</a>
-</nav>
+  
+  <!-- Barra de pesquisa de volta ao lugar correto -->
+  <input type="text" class="search" placeholder="Buscar por modelo ou marca...">
+  
   <div class="acoes">
       <span id="btn-login-abrir" style="cursor:pointer"><i class="far fa-user"></i> Login</span>
       <span class="carrinho" id="abrir-carrinho" style="cursor:pointer; margin-left: 15px;" onclick="toggleCarrinho()">
@@ -26,6 +26,13 @@
       </span>
   </div>
 </header>
+
+<!-- MENU CORRIGIDO (Fica fora do header) -->
+<nav class="menu">
+  <a href="/index.html">Início</a>
+  <a href="/catalago/catalago.html">Catálogo</a>
+  <a href="/contato/contato.html" class="active">Contato</a>
+</nav>
 
 <main class="contato-container">
     <section class="contato-header">
@@ -133,7 +140,6 @@
             <span>Total:</span>
             <span id="valor-total-carrinho">R$ 0,00</span>
         </div>
-        <!-- 👇 Botão arrumado apontando para checkout 👇 -->
         <button id="btn-finalizar-compra" onclick="window.location.href='/checkout/checkout.html'">FINALIZAR COMPRA</button>
     </div>
 </div>
@@ -165,7 +171,6 @@
     </div>
 </footer>
 
-<!-- 👇 SCRIPTS APONTANDO PRO ARQUIVO CERTO 👇 -->
 <script src="contato.js" defer></script>
 </body>
 </html>

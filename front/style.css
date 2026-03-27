@@ -450,55 +450,56 @@ input:focus { border-color: var(--premium-red); background: #fff; box-shadow: 0 
         align-items: center; /* Centraliza os ícones no mobile */
         padding: 30px 20px;
     }
-    /* Grid de Produtos (Mobile Otimizado) */
+       /* Grid de Produtos (Mobile Otimizado 2.0) */
     .conteudo {
-        padding: 30px 15px;
+        padding: 20px 10px; /* Dá mais espaço para os cards na tela do celular */
     }
 
     .grid-produtos {
-        /* Força exatamente 2 colunas travadas, sem quebrar o layout */
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px; 
+        gap: 10px; /* Espaço menor entre um card e outro */
     }
 
     .produto {
-        padding: 15px 10px;
-        /* Transforma o card para alinhar os elementos perfeitamente */
+        padding: 12px;
         display: flex;
         flex-direction: column;
-        height: 100%; 
+        justify-content: flex-start; 
+        height: 100%;
+        border-radius: 12px;
     }
 
     .produto img {
-        height: 130px; /* Um pouco menor para dar respiro */
+        width: 100%;
+        height: 150px; /* Aumentei a foto para o produto chamar mais atenção */
         object-fit: contain;
-        /* TRUQUE DE OURO: Isso apaga o fundo cinza da foto do tênis e mescla com o branco do card! */
-        mix-blend-mode: multiply; 
+        margin-bottom: 12px;
+        mix-blend-mode: darken; /* O 'darken' costuma esconder fundos cinzas melhor que o multiply */
     }
 
     .produto h3 {
         font-size: 12px;
-        margin: 10px 0;
+        margin: 0 0 10px 0;
         line-height: 1.3;
-        /* Faz o título empurrar o preço e o botão para baixo */
-        flex-grow: 1; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        /* TRUQUE NOVO: Força o título a ter no máximo 2 linhas. Se for maior, ele coloca "..." */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
     .preco {
-        font-size: 15px;
-        margin-bottom: 12px;
+        font-size: 16px;
+        /* O PULO DO GATO: Isso empurra o preço e o botão juntos lá pro fundo do card! */
+        margin-top: auto; 
+        margin-bottom: 10px;
     }
 
     .produto button {
-        padding: 10px 5px;
-        font-size: 11px; /* Fonte levemente menor para caber bonito */
-        letter-spacing: 0.5px;
+        padding: 12px 5px;
+        font-size: 12px;
         width: 100%;
-        /* Joga o botão lá pro fundo do card, alinhando todos na mesma linha */
-        margin-top: auto; 
+        border-radius: 8px;
     }
 
 
