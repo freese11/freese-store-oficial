@@ -182,8 +182,7 @@ function abrirModalStatus(id, statusAtual) {
 
 function fecharModal() {
     document.getElementById("modal").style.display = "none";
-}
-async function salvarStatus() {
+}async function salvarStatus() {
     const id = document.getElementById("codvenda").value;
     const novoStatus = document.getElementById("status-venda").value;
 
@@ -192,25 +191,22 @@ async function salvarStatus() {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "minha-chave": API_KEY
+                "minha-chave": API_KEY 
             },
-            // Vamos tentar enviar apenas o status de novo
+            // Enviamos APENAS o status novo, sem mexer no resto da venda!
             body: JSON.stringify({ status: novoStatus }) 
         });
 
-        // SE O SERVIDOR DER ERRO (como o 500), ELE CAI AQUI:
         if (!res.ok) {
-            const motivoDoErro = await res.text(); // Pega a mensagem de erro que o servidor tentou esconder
-            console.error("🚨 ERRO LÁ NO BACKEND:", motivoDoErro);
-            alert("Erro 500! Olhe a aba Console (F12) para ver a mensagem exata que o servidor mandou.");
-            return;
+            throw new Error(`O servidor retornou o erro ${res.status}`);
         }
 
         fecharModal();
-        carregar();
+        carregar(); // Recarrega a tabela limpinha
 
     } catch (error) {
         console.error("Erro ao salvar status:", error);
+        alert("Erro ao salvar o status da venda.");
     }
 }
 

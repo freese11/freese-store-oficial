@@ -88,33 +88,28 @@ router.delete("/:codvenda", async (req, res) => {
         res.status(500).json({ error: "Erro ao deletar venda" ,errorDetails: err.message});
     }
 });
-
 router.put("/:codvenda", async (req, res) => {
     try {
         const { codvenda } = req.params;
+        const { status } = req.body; // Pegamos APENAS o status que o painel enviou
         
-        // 1. Pegamos APENAS os campos que realmente existem na tabela 'vendas'
-        const { codusuario, status, data, valortotal, endereco_entrega } = req.body;
-        
-        // 2. Tiramos 'codcliente' e 'codproduto' do UPDATE, pois eles não existem nesta tabela
+        // Atualizamos APENAS a coluna status no banco de dados! O resto fica intacto.
         const result = await pool.query(
-            `UPDATE vendas 
-             SET codusuario = $1, status = $2, data = $3, valortotal = $4, endereco_entrega = $5 
-             WHERE codvenda = $6 
-             RETURNING *`,
-            [codusuario, status, data, valortotal, endereco_entrega, codvenda]
+            "UPDATE vendas SET status = $1 WHERE codvenda = $2 RETURNING *",
+            [status, codvenda]
         );
         
         if (result.rows.length === 0) {
             return res.status(404).json({ error: "Venda não encontrada" });
         }
         
-        res.json({ message: "Venda atualizada com sucesso", venda: result.rows[0] });
+        res.json({ message: "Status atualizado com sucesso", venda: result.rows[0] });
     } catch (err) {
         console.error("Erro ao atualizar no banco:", err);
         res.status(500).json({ error: "Erro ao atualizar venda", errorDetails: err.message });
     }
 });
+
 
 
 module.exports = router;
