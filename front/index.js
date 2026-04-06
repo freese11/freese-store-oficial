@@ -343,6 +343,7 @@ function sairConta() {
     }
 }
 
+
 async function salvarFotoPerfil() {
     const inputFoto = document.getElementById("foto-perfil");
     if (inputFoto.files.length === 0) {

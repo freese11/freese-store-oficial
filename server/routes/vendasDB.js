@@ -1,62 +1,102 @@
 const express = require('express');
-const pool = require('../db');
+const pool = require('../db'); // ou o caminho correto para o seu banco
 
 const router = express.Router();
 
-// 1. BUSCAR TODAS AS VENDAS (AGORA COM O NOME DO CLIENTE!)
+// =======================================================
+// 1. BUSCAR TODAS AS VENDAS (COM AS ROUPAS COMPRADAS!)
+// =======================================================
 router.get('/', async (req, res) => {
     try {
-        // Fazemos um JOIN ligando o codusuario da venda com o codusuario do cliente
-        const sql = `
+        // Passo 1: Busca o resumo de todas as vendas
+        const sqlVendas = `
             SELECT vendas.*, usuarios.nome AS nome_cliente 
             FROM vendas 
             LEFT JOIN usuarios ON vendas.codusuario = usuarios.codusuario
             ORDER BY vendas.codvenda DESC
         `;
-        const result = await pool.query(sql);
-        res.json(result.rows);
+        const resultVendas = await pool.query(sqlVendas);
+        const vendas = resultVendas.rows;
+
+        // Passo 2: Para cada venda, busca os itens (roupas) no banco de dados
+        for (let venda of vendas) {
+            const sqlItens = `
+                SELECT iv.quantidade, iv.precounitario AS preco_unitario, p.nome, p.imagem 
+                FROM itens_venda iv
+                LEFT JOIN produtos p ON iv.codproduto = p.codproduto
+                WHERE iv.codvenda = $1
+            `;
+            // OBS: Se a sua tabela de produtos usar a coluna "id" em vez de "codproduto", 
+            // mude a linha acima para: LEFT JOIN produtos p ON iv.codproduto = p.id
+            
+            const resultItens = await pool.query(sqlItens, [venda.codvenda]);
+            
+            // Passo 3: Adiciona a lista de roupas dentro do pedido
+            venda.itens = resultItens.rows; 
+        }
+
+        // Devolve as vendas completas (agora com as roupas juntas!) para o site
+        res.json(vendas);
     } catch (err) {
         console.error("Erro ao buscar vendas:", err.message);
         res.status(500).send('Erro no servidor');
     }
 });
 
-// 2. BUSCAR UMA VENDA ESPECÍFICA (TAMBÉM COM O NOME)
+// =======================================================
+// 2. BUSCAR UMA VENDA ESPECÍFICA (COM AS ROUPAS)
+// =======================================================
 router.get('/:codvenda', async (req, res) => {
     try {
         const { codvenda } = req.params;
-        const sql = `
+        
+        const sqlVenda = `
             SELECT vendas.*, usuarios.nome AS nome_cliente 
             FROM vendas 
             LEFT JOIN usuarios ON vendas.codusuario = usuarios.codusuario
             WHERE vendas.codvenda = $1
         `;
-        const result = await pool.query(sql, [codvenda]);
-        res.json(result.rows[0]);
+        const resultVenda = await pool.query(sqlVenda, [codvenda]);
+        
+        if (resultVenda.rows.length === 0) {
+            return res.status(404).json({ erro: "Venda não encontrada" });
+        }
+
+        const venda = resultVenda.rows[0];
+
+        // Busca as roupas desta venda específica
+        const sqlItens = `
+            SELECT iv.quantidade, iv.precounitario AS preco_unitario, p.nome, p.imagem 
+            FROM itens_venda iv
+            LEFT JOIN produtos p ON iv.codproduto = p.codproduto
+            WHERE iv.codvenda = $1
+        `;
+        const resultItens = await pool.query(sqlItens, [codvenda]);
+        venda.itens = resultItens.rows;
+
+        res.json(venda);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Erro no servidor');
     }
 });
 
-// ROTA PARA FINALIZAR A COMPRA E SALVAR O ENDEREÇO
+// =======================================================
+// 3. ROTA PARA FINALIZAR A COMPRA (MANTIDA INTACTA)
+// =======================================================
 router.post('/', async (req, res) => {
-    // 1. Recebemos os dados que o site da Freese Store enviou
     const { codusuario, carrinho, endereco_entrega } = req.body;
 
-    // Verificação de segurança: não deixa comprar com carrinho vazio
     if (!codusuario || !carrinho || carrinho.length === 0) {
         return res.status(400).json({ erro: "Dados incompletos para finalizar a compra." });
     }
 
     try {
-        // 2. Calcula o valor total do carrinho
         let valorTotal = 0;
         for (let item of carrinho) {
             valorTotal += (item.preco * item.quantidade);
         }
 
-        // 3. INSERE A VENDA NO BANCO DE DADOS (COM O ENDEREÇO)
         const sqlVenda = `
             INSERT INTO vendas (codusuario, status, data, valortotal, endereco_entrega) 
             VALUES ($1, 'Finalizado', CURRENT_DATE, $2, $3) 
@@ -67,7 +107,6 @@ router.post('/', async (req, res) => {
         const resultVenda = await pool.query(sqlVenda, valoresVenda);
         const codVendaGerado = resultVenda.rows[0].codvenda;
 
-        // 4. INSERE OS ITENS DA VENDA (As roupas compradas)
         const sqlItem = `
             INSERT INTO itens_venda (codvenda, codproduto, quantidade, precounitario) 
             VALUES ($1, $2, $3, $4);
@@ -77,7 +116,6 @@ router.post('/', async (req, res) => {
             await pool.query(sqlItem, [codVendaGerado, item.id, item.quantidade, item.preco]);
         }
 
-        // 5. Retorna mensagem de sucesso
         res.status(201).json({ 
             mensagem: "Compra finalizada com sucesso!", 
             codvenda: codVendaGerado 
@@ -89,6 +127,9 @@ router.post('/', async (req, res) => {
     }
 });
 
+// =======================================================
+// 4. DELETAR E ATUALIZAR STATUS (MANTIDOS INTACTOS)
+// =======================================================
 router.delete("/:codvenda", async (req, res) => {
     try {
         const { codvenda } = req.params;
@@ -106,9 +147,8 @@ router.delete("/:codvenda", async (req, res) => {
 router.put("/:codvenda", async (req, res) => {
     try {
         const { codvenda } = req.params;
-        const { status } = req.body; // Pegamos APENAS o status que o painel enviou
+        const { status } = req.body;
         
-        // Atualizamos APENAS a coluna status no banco de dados! O resto fica intacto.
         const result = await pool.query(
             "UPDATE vendas SET status = $1 WHERE codvenda = $2 RETURNING *",
             [status, codvenda]

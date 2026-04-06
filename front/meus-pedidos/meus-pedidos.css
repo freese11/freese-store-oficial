@@ -1,0 +1,283 @@
+/* ============================================================
+   1. CONFIGURAÇÕES GERAIS E HEADER
+   ============================================================ */
+:root {
+    --premium-red: #a70101;
+    --dark: #111;
+    --light-gray: #f8f9fa;
+    --white: #ffffff;
+    --transition: 0.3s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body { background: #fafafa; color: var(--dark); overflow-x: hidden; }
+
+.top-bar { background: #000; color: #fff; display: flex; justify-content: center; padding: 10px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+.header { display: flex; align-items: center; justify-content: space-between; padding: 15px 5%; background: #fff; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #eee; }
+.logo img { height: 60px; width: auto; object-fit: contain; cursor: pointer;}
+.acoes span { cursor: pointer; transition: var(--transition); font-weight: 700; font-size: 14px; text-transform: uppercase; }
+.acoes span:hover { color: var(--premium-red); }
+
+/* ============================================================
+   2. DASHBOARD PREMIUM DE PEDIDOS (ESTILO TICKET)
+   ============================================================ */
+.conteudo-pedidos {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 0 5%;
+    min-height: 60vh;
+}
+
+.header-pagina {
+    margin-bottom: 40px;
+    border-bottom: 3px solid var(--dark);
+    padding-bottom: 20px;
+}
+
+.header-pagina h2 {
+    font-size: 45px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    color: var(--dark);
+    line-height: 1;
+}
+
+.header-pagina span { color: var(--premium-red); }
+
+.header-pagina p {
+    color: #666;
+    font-size: 16px;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+.pedidos-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+/* O CARTÃO ESTILO TICKET/RECIBO */
+.pedido-card {
+    background: #fff;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06); 
+    display: flex;
+    overflow: hidden; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pedido-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+/* A linha colorida na lateral do cartão */
+.pedido-linha-decorativa { width: 8px; flex-shrink: 0; }
+.linha-pendente { background: #f59e0b; }
+.linha-concluido { background: #111; } /* Preto para concluído (luxo) */
+.linha-cancelado { background: var(--premium-red); }
+
+.pedido-conteudo {
+    padding: 30px;
+    width: 100%;
+}
+
+/* Cabeçalho do Cartão com linha tracejada */
+.pedido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed #e5e5e5;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.header-esq { display: flex; align-items: center; }
+
+.icone-caixa {
+    background: #f8f9fa;
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--dark);
+    margin-right: 15px;
+}
+
+.pedido-id { font-size: 24px; font-weight: 900; color: var(--dark); display: block; letter-spacing: -0.5px;}
+.pedido-data { font-size: 13px; color: #888; font-weight: 600; margin-top: 2px; display: block; text-transform: uppercase;}
+
+/* Corpo do Cartão */
+.pedido-body {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-bottom: 25px;
+}
+
+.info-grupo { display: flex; flex-direction: column; gap: 8px; }
+
+.info-grupo label {
+    font-size: 12px;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.info-grupo label i { color: var(--premium-red); margin-right: 5px; }
+.info-grupo span { font-size: 15px; color: #333; font-weight: 600; line-height: 1.5; }
+
+.info-valor {
+    font-size: 28px !important;
+    font-weight: 900 !important;
+    color: var(--premium-red) !important;
+    letter-spacing: -1px;
+}
+
+/* Etiquetas Modernas */
+.badge {
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+}
+
+.status-pendente { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.status-concluido { background: #111; color: #fff; border: 1px solid #111; }
+.status-cancelado { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+/* Rodapé com botões de ação */
+.pedido-footer { display: flex; gap: 15px; }
+
+.pedido-footer button {
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 13px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: 2px solid transparent;
+}
+
+.btn-detalhes { background: #f8f9fa; color: var(--dark); border-color: #eee; }
+.btn-detalhes:hover { background: var(--dark); color: #fff; border-color: var(--dark); }
+
+.btn-ajuda { background: #fff; color: #25D366; border-color: #25D366; }
+.btn-ajuda:hover { background: #25D366; color: #fff; }
+
+/* ESTADO VAZIO (SEM COMPRAS) */
+.pedidos-vazio {
+    text-align: center;
+    padding: 80px 20px;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px dashed #ccc;
+}
+
+.pedidos-vazio i { font-size: 60px; color: #ddd; margin-bottom: 20px; }
+.pedidos-vazio h3 { font-size: 24px; font-weight: 900; margin-bottom: 10px; color: #111; text-transform: uppercase; }
+.pedidos-vazio p { font-size: 15px; color: #666; margin-bottom: 25px; }
+
+.btn-comprar {
+    background: var(--dark); color: #fff; padding: 15px 30px; 
+    text-decoration: none; border-radius: 8px; font-weight: 800; 
+    font-size: 14px; text-transform: uppercase; transition: var(--transition); 
+    display: inline-block;
+}
+
+.btn-comprar:hover { background: var(--premium-red); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(167, 1, 1, 0.2); }
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .header-pagina h2 { font-size: 35px; }
+    .pedido-body { grid-template-columns: 1fr; gap: 20px; }
+    .pedido-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .pedido-footer { flex-direction: column; }
+    .pedido-conteudo { padding: 20px; }
+}
+
+/* ============================================================
+   3. MODAL DE DETALHES (JANELA FLUTUANTE)
+   ============================================================ */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000; opacity: 0; animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+.modal-conteudo {
+    background: #fff; width: 90%; max-width: 500px;
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    transform: translateY(20px); animation: slideUp 0.3s forwards;
+}
+
+@keyframes slideUp { to { transform: translateY(0); } }
+
+.modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 25px; border-bottom: 1px solid #eee; background: #fafafa;
+}
+
+.modal-header h3 { font-size: 20px; font-weight: 900; text-transform: uppercase; color: var(--dark); }
+.modal-header h3 span { color: var(--premium-red); }
+
+.btn-fechar {
+    background: transparent; border: none; font-size: 20px;
+    color: #999; cursor: pointer; transition: 0.3s;
+}
+.btn-fechar:hover { color: var(--premium-red); transform: scale(1.1); }
+
+.modal-body { padding: 25px; max-height: 70vh; overflow-y: auto; }
+
+.info-resumo {
+    background: #f8f9fa; padding: 15px; border-radius: 8px;
+    margin-bottom: 25px; border-left: 4px solid var(--dark);
+}
+
+.titulo-produtos { font-size: 14px; text-transform: uppercase; color: #888; font-weight: 800; margin-bottom: 15px; }
+
+.lista-produtos-comprados { display: flex; flex-direction: column; gap: 15px; }
+
+/* Item individual dentro do modal */
+.item-comprado {
+    display: flex; align-items: center; gap: 15px;
+    padding-bottom: 15px; border-bottom: 1px dashed #eee;
+}
+
+.item-img {
+    width: 60px; height: 60px; border-radius: 8px;
+    background: #eee; object-fit: cover;
+}
+
+.item-info { flex: 1; display: flex; flex-direction: column; }
+.item-info strong { font-size: 14px; color: var(--dark); }
+.item-info span { font-size: 12px; color: #666; }
+.item-preco { font-weight: 900; color: var(--premium-red); font-size: 15px; }
+
+.modal-footer-total {
+    margin-top: 25px; padding-top: 20px; border-top: 2px solid #eee;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.modal-footer-total span { font-weight: 800; text-transform: uppercase; color: #888; font-size: 14px; }
+.modal-footer-total h3 { font-size: 24px; font-weight: 900; color: var(--dark); }
