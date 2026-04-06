@@ -100,18 +100,26 @@ button.deletar { background: #e74c3c; border: none; padding: 6px 12px; color: wh
 .modal {
     display: none; 
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.75);
     z-index: 1000;
-    align-items: center; 
-    justify-content: center;
-    padding: 20px; 
     backdrop-filter: blur(4px);
 }
 
 .modal-content {
     background: #ffffff;
-    width: 100%;
+    
+    /* 🔥 A MÁGICA INFALÍVEL DA CENTRALIZAÇÃO AQUI 🔥 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* 🔥 FIM DA MÁGICA 🔥 */
+
+    width: 90%; /* Ajuste para não colar nas bordas no celular */
     max-width: 420px; 
     padding: 30px 25px;
     border-radius: 16px; 
@@ -250,7 +258,6 @@ button.deletar { background: #e74c3c; border: none; padding: 6px 12px; color: wh
         width: 100vw;
     }
 
-    /* 2. Topbar - Layout Inteligente (Título no topo, Botões lado a lado) */
     .topbar {
         display: flex;
         flex-wrap: wrap;
@@ -260,20 +267,20 @@ button.deletar { background: #e74c3c; border: none; padding: 6px 12px; color: wh
     }
 
     .topbar .left {
-        display: contents; /* Truque Ninja: Ignora a div .left e gerencia os filhos direto */
+        display: contents; 
     }
 
     .topbar h1 { 
         width: 100%;
-        order: 1; /* Joga o título para a primeira linha */
+        order: 1; 
         font-size: 22px; 
         text-align: center;
         margin-bottom: 5px;
     }
 
     .btn-voltar {
-        order: 2; /* Joga para baixo do título (esquerda) */
-        flex: 1; /* Divide o espaço 50/50 */
+        order: 2; 
+        flex: 1; 
         padding: 12px 5px;
         font-size: 14px;
         border-radius: 8px;
@@ -281,8 +288,8 @@ button.deletar { background: #e74c3c; border: none; padding: 6px 12px; color: wh
     }
 
     .btn-novo {
-        order: 3; /* Joga para baixo do título (direita) */
-        flex: 1; /* Divide o espaço 50/50 */
+        order: 3; 
+        flex: 1; 
         padding: 12px 5px;
         font-size: 14px;
         border-radius: 8px;
