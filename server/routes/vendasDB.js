@@ -1,14 +1,11 @@
 const express = require('express');
-const pool = require('../db'); // ou o caminho correto para o seu banco
+const pool = require('../db');
 
 const router = express.Router();
 
-// =======================================================
 // 1. BUSCAR TODAS AS VENDAS (COM AS ROUPAS COMPRADAS!)
-// =======================================================
 router.get('/', async (req, res) => {
     try {
-        // Passo 1: Busca o resumo de todas as vendas
         const sqlVendas = `
             SELECT vendas.*, usuarios.nome AS nome_cliente 
             FROM vendas 
@@ -18,24 +15,19 @@ router.get('/', async (req, res) => {
         const resultVendas = await pool.query(sqlVendas);
         const vendas = resultVendas.rows;
 
-        // Passo 2: Para cada venda, busca os itens (roupas) no banco de dados
         for (let venda of vendas) {
+            // 👇 CORRIGIDO: Removido p.imagem para evitar o Erro 500
             const sqlItens = `
-                SELECT iv.quantidade, iv.precounitario AS preco_unitario, p.nome, p.imagem 
+                SELECT iv.quantidade, iv.precounitario AS preco_unitario, p.nome 
                 FROM itens_venda iv
-                LEFT JOIN produtos p ON iv.codproduto = p.codproduto
+                LEFT JOIN produtos p ON iv.codproduto = p.id
                 WHERE iv.codvenda = $1
             `;
-            // OBS: Se a sua tabela de produtos usar a coluna "id" em vez de "codproduto", 
-            // mude a linha acima para: LEFT JOIN produtos p ON iv.codproduto = p.id
             
             const resultItens = await pool.query(sqlItens, [venda.codvenda]);
-            
-            // Passo 3: Adiciona a lista de roupas dentro do pedido
             venda.itens = resultItens.rows; 
         }
 
-        // Devolve as vendas completas (agora com as roupas juntas!) para o site
         res.json(vendas);
     } catch (err) {
         console.error("Erro ao buscar vendas:", err.message);
@@ -43,9 +35,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// =======================================================
-// 2. BUSCAR UMA VENDA ESPECÍFICA (COM AS ROUPAS)
-// =======================================================
+// 2. BUSCAR UMA VENDA ESPECÍFICA
 router.get('/:codvenda', async (req, res) => {
     try {
         const { codvenda } = req.params;
@@ -64,11 +54,11 @@ router.get('/:codvenda', async (req, res) => {
 
         const venda = resultVenda.rows[0];
 
-        // Busca as roupas desta venda específica
+        // 👇 CORRIGIDO: Removido p.imagem aqui também
         const sqlItens = `
-            SELECT iv.quantidade, iv.precounitario AS preco_unitario, p.nome, p.imagem 
+            SELECT iv.quantidade, iv.precounitario AS preco_unitario, p.nome 
             FROM itens_venda iv
-            LEFT JOIN produtos p ON iv.codproduto = p.codproduto
+            LEFT JOIN produtos p ON iv.codproduto = p.id
             WHERE iv.codvenda = $1
         `;
         const resultItens = await pool.query(sqlItens, [codvenda]);
@@ -82,7 +72,7 @@ router.get('/:codvenda', async (req, res) => {
 });
 
 // =======================================================
-// 3. ROTA PARA FINALIZAR A COMPRA (MANTIDA INTACTA)
+// ROTAS DE CRIAR, DELETAR E ATUALIZAR VENDA
 // =======================================================
 router.post('/', async (req, res) => {
     const { codusuario, carrinho, endereco_entrega } = req.body;
@@ -127,9 +117,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-// =======================================================
-// 4. DELETAR E ATUALIZAR STATUS (MANTIDOS INTACTOS)
-// =======================================================
 router.delete("/:codvenda", async (req, res) => {
     try {
         const { codvenda } = req.params;
