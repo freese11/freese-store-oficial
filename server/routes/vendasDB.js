@@ -16,11 +16,11 @@ router.get('/', async (req, res) => {
         const vendas = resultVendas.rows;
 
         for (let venda of vendas) {
-            // 👇 CORRIGIDO: Removido p.imagem para evitar o Erro 500
+            // 👇 VOLTAMOS PARA p.codproduto E MANTIVEMOS SEM O p.imagem 👇
             const sqlItens = `
                 SELECT iv.quantidade, iv.precounitario AS preco_unitario, p.nome 
                 FROM itens_venda iv
-                LEFT JOIN produtos p ON iv.codproduto = p.id
+                LEFT JOIN produtos p ON iv.codproduto = p.codproduto
                 WHERE iv.codvenda = $1
             `;
             
@@ -54,11 +54,11 @@ router.get('/:codvenda', async (req, res) => {
 
         const venda = resultVenda.rows[0];
 
-        // 👇 CORRIGIDO: Removido p.imagem aqui também
+        // 👇 VOLTAMOS PARA p.codproduto E MANTIVEMOS SEM O p.imagem 👇
         const sqlItens = `
             SELECT iv.quantidade, iv.precounitario AS preco_unitario, p.nome 
             FROM itens_venda iv
-            LEFT JOIN produtos p ON iv.codproduto = p.id
+            LEFT JOIN produtos p ON iv.codproduto = p.codproduto
             WHERE iv.codvenda = $1
         `;
         const resultItens = await pool.query(sqlItens, [codvenda]);
@@ -66,7 +66,7 @@ router.get('/:codvenda', async (req, res) => {
 
         res.json(venda);
     } catch (err) {
-        console.error(err.message);
+        console.error("Erro ao buscar venda específica:", err.message);
         res.status(500).send('Erro no servidor');
     }
 });
