@@ -23,7 +23,7 @@ body {
 }
 
 /* ============================================================
-   2. HEADER, NAV E TOP BAR
+   2. HEADER, NAV E TOP BAR (PADRONIZADO)
    ============================================================ */
 .top-bar {
     background: #000;
@@ -81,6 +81,21 @@ body {
     font-size: 14px;
 }
 
+.acoes img, .foto-perfil {
+    width: 32px; 
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: var(--transition);
+}
+
+.acoes img:hover, .foto-perfil:hover {
+    border-color: var(--premium-red);
+    transform: scale(1.05);
+}
+
 .acoes span { cursor: pointer; transition: var(--transition); }
 .acoes span:hover { color: var(--premium-red); }
 
@@ -111,7 +126,6 @@ body {
     color: #000;
     border-bottom: 2px solid var(--premium-red); 
 }
-
 
 /* ============================================================
    3. FILTROS E CONTEÚDO (Catálogo)
@@ -261,7 +275,15 @@ body {
 .btn-voltar:hover { color: #000; }
 .hidden { display: none !important; }
 
-/* Botões do Modal de Sair da Conta */
+/* Botões do Modal de Sair da Conta e Meus Pedidos */
+.btn-meus-pedidos {
+    background: transparent; color: #111; border: 2px solid #111; 
+    padding: 14px; border-radius: 8px; font-weight: 800; font-size: 14px;
+    cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%;
+    margin-top: 10px; margin-bottom: 10px; 
+}
+.btn-meus-pedidos:hover { background: #111; color: white; transform: translateY(-2px); }
+
 .btn-cancelar {
     padding: 12px; border: 1px solid #ddd; background: #fff; 
     border-radius: 8px; cursor: pointer; font-weight: bold; color: #333; transition: 0.3s;
@@ -278,75 +300,26 @@ body {
    CARRINHO LATERAL 
    ============================================================ */
 .carrinho-sidebar {
-    position: fixed;
-    right: -400px;
-    top: 0;
-    width: 380px;
-    height: 100%;
-    background: #fff;
-    z-index: 4000;
-    transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    display: flex;
-    flex-direction: column;
-    box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    position: fixed; right: -400px; top: 0; width: 380px; height: 100%;
+    background: #fff; z-index: 4000; transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1);
 }
-
 .carrinho-sidebar.ativo { right: 0; }
-
-.carrinho-header {
-    padding: 30px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: normal;
-    text-transform: none;
-}
-
+.carrinho-header { padding: 30px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: normal; text-transform: none; }
 .fechar-carrinho { cursor: pointer; font-size: 24px; }
-
 .carrinho-itens-lista { flex-grow: 1; overflow-y: auto; padding: 20px; }
-
 .item-no-carrinho { display: flex; gap: 15px; padding: 15px; border-bottom: 1px solid #f5f5f5; align-items: center; }
 .item-no-carrinho img { width: 70px; height: 70px; object-fit: contain; border-radius: 0; }
-
 .carrinho-footer { padding: 30px; border-top: 1px solid #eee; background: #fcfcfc; }
-
 .total-container { display: flex; justify-content: space-between; font-size: 22px; font-weight: 900; margin-bottom: 20px; }
-
-#btn-finalizar-compra {
-    width: 100%;
-    padding: 18px;
-    background: #27ae60;
-    color: white;
-    border: none;
-    font-weight: 700;
-    border-radius: 12px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: 0.3s ease;
-}
-
-#btn-finalizar-compra:hover {
-    background: #219150;
-}
-
-#carrinho-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.4);
-    z-index: 3999;
-}
+#btn-finalizar-compra { width: 100%; padding: 18px; background: #27ae60; color: white; border: none; font-weight: 700; border-radius: 12px; cursor: pointer; text-transform: uppercase; transition: 0.3s ease; }
+#btn-finalizar-compra:hover { background: #219150; }
+#carrinho-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 3999; }
 
 /* ============================================================
-   6. FOOTER ADICIONADO PARA O PADRÃO GERAL
+   6. FOOTER 
    ============================================================ */
-.footer-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 40px; padding: 60px 8%; background: #f9f9f9; color: #333;
-}
+.footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; padding: 60px 8%; background: #f9f9f9; color: #333; }
 .footer-col h3 { font-size: 14px; margin-bottom: 20px; letter-spacing: 1px; }
 .footer-col a { display: block; text-decoration: none; color: #666; margin-bottom: 10px; font-size: 13px; }
 .footer-logo { height: 60px; margin-bottom: 20px; filter: grayscale(1); }
@@ -355,51 +328,14 @@ body {
 /* ============================================================
    7. NOTIFICAÇÕES TOAST (FREESE STORE)
    ============================================================ */
-#toast-container {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    pointer-events: none;
-}
-
-.toast-freese {
-    min-width: 320px;
-    max-width: 400px;
-    background-color: #111; 
-    color: #fff;
-    padding: 16px 20px;
-    border-radius: 12px; 
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05); 
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    font-family: 'Inter', sans-serif;
-    position: relative;
-    overflow: hidden;
-    pointer-events: auto;
-    
-    transform: translateX(120%) scale(0.9);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
+#toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 15px; pointer-events: none; }
+.toast-freese { min-width: 320px; max-width: 400px; background-color: #111; color: #fff; padding: 16px 20px; border-radius: 12px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05); display: flex; align-items: center; gap: 15px; font-family: 'Inter', sans-serif; position: relative; overflow: hidden; pointer-events: auto; transform: translateX(120%) scale(0.9); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .toast-freese.show { transform: translateX(0) scale(1); opacity: 1; }
-
-.toast-icon {
-    font-size: 22px; display: flex; align-items: center; justify-content: center;
-    background: rgba(255,255,255,0.08); width: 48px; height: 48px;
-    border-radius: 50%; flex-shrink: 0; 
-}
-
+.toast-icon { font-size: 22px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.08); width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0; }
 .toast-content { display: flex; flex-direction: column; justify-content: center; flex-grow: 1; padding-right: 10px; }
 .toast-title { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: #aaa; margin-bottom: 4px; }
 .toast-message { font-size: 14px; font-weight: 500; line-height: 1.4; color: #fff; }
 .toast-progress { position: absolute; bottom: 0; left: 0; height: 4px; background-color: var(--toast-cor); width: 100%; animation: toastProgress 3.5s linear forwards; }
-
 @keyframes toastProgress { 0% { width: 100%; } 100% { width: 0%; } }
 
 /* ============================================================
@@ -407,70 +343,27 @@ body {
    ============================================================ */
 @media (max-width: 768px) {
     .top-bar { display: none; } 
-    
-    .header { padding: 15px; }
+    .header { flex-wrap: wrap; padding: 15px; justify-content: space-between; }
     .logo img { height: 45px; }
-    
-    .search { width: 100%; order: 3; max-width: 100%; margin-top: 10px; }
-    
-    .menu {
-        flex-wrap: wrap;
-        gap: 15px;
-        padding: 15px 10px;
-        font-size: 14px;
-    }
+    .search { order: 3; width: 100%; max-width: 100%; margin-top: 10px; }
+    .menu { flex-wrap: wrap; gap: 15px; padding: 15px 10px; font-size: 14px; }
     
     .conteudo-catalago { padding: 20px 15px; }
     .header-pagina h2 { font-size: 24px; }
     .header-pagina p { font-size: 13px; }
-    
     .filtros-container { flex-direction: column; gap: 10px; margin-bottom: 30px; }
     .select-filtro { width: 100%; padding: 14px; text-align: center; font-size: 13px; }
-
-    .grid-catalago { 
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 12px; 
-    }
-    
+    .grid-catalago { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .produto { padding: 10px; border-radius: 8px; }
     .produto img { height: 140px; margin-bottom: 10px; } 
     .produto h3 { font-size: 11px; margin-bottom: 8px; }
     .preco { font-size: 15px; margin-bottom: 10px; }
-    
-    .produto button { 
-        padding: 10px; 
-        font-size: 10px; 
-        border-radius: 6px;
-    }
+    .produto button { padding: 10px; font-size: 10px; border-radius: 6px; }
 
     .carrinho-sidebar { width: 100%; right: -100%; }
-
     .footer-grid { grid-template-columns: 1fr; text-align: center; gap: 30px; padding: 40px 20px; }
     .footer-logo { margin: 0 auto 15px auto; }
 
     #toast-container { bottom: 20px; right: 20px; left: 20px; align-items: center; }
     .toast-freese { width: 100%; max-width: 100%; min-width: unset; }
-}
-
-/* Botão Ver Meus Pedidos (Modal Perfil) */
-.btn-meus-pedidos {
-    background: transparent;
-    color: #111;
-    border: 2px solid #111; 
-    padding: 14px;
-    border-radius: 8px;
-    font-weight: 800;
-    font-size: 14px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: 0.3s;
-    width: 100%;
-    margin-top: 10px; 
-    margin-bottom: 10px; 
-}
-
-.btn-meus-pedidos:hover {
-    background: #111;
-    color: white;
-    transform: translateY(-2px);
 }
