@@ -46,7 +46,11 @@ async function carregarProdutosHome() {
         const resposta = await fetch(API_URL);
         todosProdutos = await resposta.json();
         
-        const destaques = todosProdutos.filter(p => p.nome.toLowerCase().includes("bmw"));
+        // -------------------------------------------------------------
+        // MUDANÇA AQUI: Pegando os 3 últimos produtos (lançamentos)
+        // e invertendo a ordem para o mais novo aparecer primeiro!
+        // -------------------------------------------------------------
+        const destaques = todosProdutos.slice(-3).reverse();
         
         listaProdutosDestaque.innerHTML = "";
         destaques.forEach(produto => {
