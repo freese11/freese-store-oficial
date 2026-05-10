@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contato | Freese Store</title>
+  <title>About Us | Freese Store</title>
   <link rel="stylesheet" href="contato.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
     <span><i class="fas fa-truck"></i> FRETE GRÁTIS EM COMPRAS ACIMA DE R$ 499</span>
 </div>
 
-<!-- CABEÇALHO CORRIGIDO -->
+<!-- CABEÇALHO -->
 <header class="header">
   <div class="logo" onclick="window.location.href='/index.html'">
       <img src="/midias/freese2.png" alt="Freese Store">
@@ -34,41 +34,43 @@
 <nav class="menu">
   <a href="/index.html">Início</a>
   <a href="/catalago/catalago.html">Catálogo</a>
-  <a href="/contato/contato.html" class="active">Contato</a>
+  <a href="/contato/contato.html" class="active">Sobre Nós</a>
 </nav>
 
-<main class="contato-container">
-    <section class="contato-header">
-        <h1>FALE COM A <span>ELITE</span></h1>
-        <p>Dúvidas ou suporte? Nossa equipe responde em até 24h.</p>
+<!-- ÁREA EXCLUSIVA DE SOBRE NÓS -->
+<main class="sobre-container">
+    <section class="sobre-header">
+        <h1>ABOUT <span>US</span></h1>
+        <p>Welcome to Freese Store. Discover our journey and the tech behind this project.</p>
     </section>
 
-    <div class="contato-grid">
-        <div class="contato-info">
+    <div class="sobre-grid">
+        <!-- Lado Esquerdo: Cards de Informação -->
+        <div class="sobre-info">
             <div class="info-card">
-                <i class="fab fa-whatsapp"></i>
-                <h3>WHATSAPP</h3>
-                <p>(51) 99999-9999</p>
+                <i class="fas fa-rocket"></i>
+                <h3>THE PROJECT</h3>
+                <p>This is a full-stack online store created to sell urban clothing and sneakers. It was built to provide the best streetwear shopping experience.</p>
             </div>
             <div class="info-card">
-                <i class="far fa-envelope"></i>
-                <h3>E-MAIL</h3>
-                <p>suporte@freesestore.com.br</p>
+                <i class="fas fa-code"></i>
+                <h3>DEVELOPMENT</h3>
+                <p>Created with a focus on modern UI/UX design, fast performance, and a secure relational database system.</p>
             </div>
         </div>
 
-        <div class="contato-form">
-            <form id="form-contato-ajuda">
-                <div class="input-group">
-                    <label>NOME COMPLETO</label>
-                    <input type="text" placeholder="Seu nome" required>
-                </div>
-                <div class="input-group">
-                    <label>MENSAGEM</label>
-                    <textarea rows="4" placeholder="Como podemos ajudar?" required></textarea>
-                </div>
-                <button type="submit" class="btn-enviar">ENVIAR MENSAGEM</button>
-            </form>
+        <!-- Lado Direito: Tecnologias Usadas -->
+        <div class="sobre-tech">
+            <h2>TECHNOLOGIES USED</h2>
+            <p style="margin-bottom: 20px; color: #666; font-size: 14px;">Here is the tech stack used to build this amazing e-commerce:</p>
+            
+            <ul class="tech-list">
+                <li><i class="fab fa-html5" style="color:#e34c26"></i> <strong>HTML5 & CSS3:</strong> Custom and responsive layout.</li>
+                <li><i class="fab fa-js" style="color:#f7df1e"></i> <strong>JavaScript (Vanilla):</strong> Dynamic front-end interactions.</li>
+                <li><i class="fab fa-node-js" style="color:#68a063"></i> <strong>Node.js & Express:</strong> Secure backend API and routing.</li>
+                <li><i class="fas fa-database" style="color:#336791"></i> <strong>PostgreSQL:</strong> Relational database management.</li>
+                <li><i class="fab fa-github" style="color:#181717"></i> <strong>GitHub & Render:</strong> Version control and cloud hosting.</li>
+            </ul>
         </div>
     </div>
 </main>
@@ -190,6 +192,6 @@
     </div>
 </footer>
 
-<script src="contato.js" defer></script>
+<script src="sobre.js" defer></script>
 </body>
 </html>
