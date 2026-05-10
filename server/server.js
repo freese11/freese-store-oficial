@@ -11,7 +11,7 @@ const app = express();
 const produtosRouter = require('./routes/produtosDB');
 const usuariosRouter = require('./routes/usuariosDB');
 const vendasRouter = require('./routes/vendasDB');
-const loginRouter = require('./routes/loginDB');
+// Retirei o loginDB daqui, pois o seu login deve estar junto com usuariosDB!
 
 // ==========================================
 // CONFIGURAÇÕES BÁSICAS
@@ -39,8 +39,7 @@ function autenticarAPIkey(req, res, next) {
 // ==========================================
 // 1. ÁREA PÚBLICA (Não precisa de chave)
 // ==========================================
-app.use('/login', loginRouter);      // Fazer login
-app.use('/usuarios', usuariosRouter); // Criar conta, buscar perfil e trocar foto
+app.use('/usuarios', usuariosRouter); // Criar conta, buscar perfil, login e trocar foto
 
 // ==========================================
 // 2. CATÁLOGO DE PRODUTOS
