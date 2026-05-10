@@ -2,7 +2,8 @@ const URL_SERVIDOR = "https://projeto-programador-freese-backend.onrender.com";
 const API_URL = `${URL_SERVIDOR}/produtos`;
 const USUARIOS_URL = `${URL_SERVIDOR}/usuarios`;
 const LOGIN_URL = `${URL_SERVIDOR}/login`;
-const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
+
+// 🚨 ATENÇÃO: SENHA REMOVIDA! Nenhuma chave secreta fica em páginas públicas.
 
 const IMG_FALHA_PRODUTO = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='20' fill='%23999'%3ESem Foto%3C/text%3E%3C/svg%3E";
 const IMG_FALHA_USUARIO = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
@@ -52,6 +53,7 @@ async function carregarProduto() {
         document.getElementById("produto-wrapper").innerHTML = "<h2>Erro ao carregar o servidor.</h2>";
     }
 }
+
 function renderizarDetalhes(produto) {
     const wrapper = document.getElementById("produto-wrapper");
     let srcImg = montarUrlSegura(produto.img) || IMG_FALHA_PRODUTO;
@@ -66,7 +68,7 @@ function renderizarDetalhes(produto) {
                     
     let ehTamanhoUnico = nomeProduto.includes("boné") || 
                          nomeProduto.includes("bone") ||
-                         nomeProduto.includes("touca"); // Adicionei touca também como dica!
+                         nomeProduto.includes("touca");
 
     let opcoesTamanho = "";
     
@@ -97,7 +99,6 @@ function renderizarDetalhes(produto) {
         `;
     }
 
-    // Injeção do HTML na tela
     wrapper.innerHTML = `
         <div class="produto-imagem">
             <img src="${srcImg}" alt="${produto.nome}" onerror="this.onerror=null; this.src='${IMG_FALHA_PRODUTO}';">
@@ -107,13 +108,11 @@ function renderizarDetalhes(produto) {
             <h1>${produto.nome}</h1>
             <p class="preco-detalhe">R$ ${Number(produto.valor).toFixed(2).replace('.', ',')}</p>
             
-            <!-- Melhoria: Usa a descrição do produto se existir, senão usa a padrão -->
             <p class="descricao">${produto.descricao ? produto.descricao : 'Produto original de alta qualidade. Adicione estilo e conforto ao seu guarda-roupa com as melhores peças do mercado.'}</p>
             
             <div class="seletor-tamanho">
                 <label for="tamanho-escolhido">Selecione o Tamanho:</label>
                 <select id="tamanho-escolhido">
-                    <!-- Opções vazias para forçar o cliente a escolher seria bom no futuro, ex: <option value="" disabled selected>Escolha...</option> -->
                     ${opcoesTamanho}
                 </select>
             </div>
@@ -122,8 +121,6 @@ function renderizarDetalhes(produto) {
         </div>
     `;
 }
-
-
 
 function adicionarAoCarrinhoDetalhes() {
     if (!localStorage.getItem("usuarioAtivo")) {
@@ -231,9 +228,10 @@ async function efetuarLogin(event) {
     const senha = document.getElementById("senha").value.trim();
 
     try {
+        // Removida a exigência de chave no cabeçalho
         const resposta = await fetch(LOGIN_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json", "minha-chave": API_KEY },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email: email, senha: senha, tipoLoginEscolhido: tipoLoginEscolhido })
         });
 
@@ -242,7 +240,6 @@ async function efetuarLogin(event) {
             localStorage.setItem("usuarioAtivo", JSON.stringify(dados));
             
             showToast("Login realizado com sucesso!", "success");
-            // Delay para dar tempo de ler o Toast verde antes de atualizar a página
             setTimeout(() => { location.reload(); }, 1500); 
         } else {
             showToast("E-mail ou senha incorretos! Verifique também o perfil escolhido.", "error");
@@ -277,9 +274,9 @@ async function registrarCliente(event) {
     btnSalvar.disabled = true;
 
     try {
+        // Removida a chave do cabeçalho de registro
         const res = await fetch(USUARIOS_URL, {
             method: "POST",
-            headers: { "minha-chave": API_KEY },
             body: formData
         });
 
@@ -336,7 +333,8 @@ async function verificarStatusUsuario() {
 
         if (idUser) {
             try {
-                const res = await fetch(`${USUARIOS_URL}/${idUser}`, { headers: { "minha-chave": API_KEY } });
+                // Busca as informações do usuário logado sem usar chave admin
+                const res = await fetch(`${USUARIOS_URL}/${idUser}`);
                 if (res.ok) {
                     const u = await res.json();
                     if (u && u.foto_perfil) {
@@ -393,7 +391,7 @@ async function salvarFotoPerfil() {
     btnSalvar.disabled = true;
 
     try {
-        const resBusca = await fetch(`${USUARIOS_URL}/${idUser}`, { headers: { "minha-chave": API_KEY } });
+        const resBusca = await fetch(`${USUARIOS_URL}/${idUser}`);
         const u = await resBusca.json();
 
         const formData = new FormData();
@@ -406,13 +404,12 @@ async function salvarFotoPerfil() {
 
         const resPut = await fetch(`${USUARIOS_URL}/${idUser}`, {
             method: "PUT",
-            headers: { "minha-chave": API_KEY },
+            // Removida a chave de admin para o usuário poder alterar a própria foto
             body: formData
         });
 
         if (resPut.ok) {
             showToast("Foto de perfil atualizada com sucesso!", "success");
-            // Espera o aviso para atualizar a página
             setTimeout(() => { location.reload(); }, 1500); 
         } else { showToast("Erro ao atualizar foto. Tente novamente.", "error"); }
     } catch(err) { showToast("Erro de conexão ao tentar salvar a foto.", "error"); } 
@@ -421,7 +418,6 @@ async function salvarFotoPerfil() {
 
 // Lógica de Confirmação de Saída da Conta (Deslogar)
 function sairConta() {
-    // Esconde o modal de perfil e abre o modal de confirmação
     document.getElementById("modal-perfil").style.display = "none";
     document.getElementById("modal-confirmacao-sair").style.display = "block";
 }

@@ -1,7 +1,7 @@
 const URL_SERVIDOR = "https://projeto-programador-freese-backend.onrender.com";
 const API_VENDAS = `${URL_SERVIDOR}/vendas`;
-const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
 
+// 🚨 ATENÇÃO: NENHUMA SENHA DE ADMIN AQUI! Esta página é pública.
 let pedidosMemoria = [];
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -30,10 +30,10 @@ async function carregarMeusPedidos(meuId) {
     const container = document.getElementById("lista-pedidos");
 
     try {
+        // O cliente busca os pedidos dele sem precisar de chave de administrador
         const resposta = await fetch(API_VENDAS, {
             method: "GET",
             headers: {
-                "minha-chave": API_KEY,
                 "Content-Type": "application/json"
             }
         });
@@ -41,6 +41,8 @@ async function carregarMeusPedidos(meuId) {
         if (!resposta.ok) throw new Error("Erro no servidor");
 
         const todasVendas = await resposta.json();
+        
+        // Filtra para mostrar APENAS os pedidos do cliente logado
         const meusPedidos = todasVendas.filter(venda => venda.codusuario == meuId).reverse();
 
         pedidosMemoria = meusPedidos;
@@ -94,8 +96,6 @@ function renderizarPedidos(pedidos) {
         let textoStatus = 'PENDENTE';
         let iconeStatus = 'fa-clock';
 
-        // AQUI ESTÁ A CORREÇÃO: Removi a palavra "finalizado" daqui. 
-        // Agora, se o banco mandar "Finalizado" (como no pedido #16), ele cai como PENDENTE.
         if (statusBanco === 'concluido' || statusBanco === 'concluído') {
             classeStatus = 'status-concluido';
             classeLinha = 'linha-concluido';
@@ -166,7 +166,6 @@ function abrirModalDetalhes(idVenda) {
     let classeStatus = 'status-pendente';
     let textoStatus = 'PENDENTE';
     
-    // CORREÇÃO NO MODAL TAMBÉM
     if (statusBanco === 'concluido' || statusBanco === 'concluído') {
         classeStatus = 'status-concluido'; textoStatus = 'FINALIZADO';
     } else if (statusBanco === 'cancelado' || statusBanco === 'recusado') {

@@ -1,5 +1,5 @@
 const API = "https://projeto-programador-freese-backend.onrender.com/produtos";
-const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
+const API_KEY = "LUCAS_FREESE_SENHAZINHA111"; // A sua senha oficial configurada aqui!
 
 // Imagem padrão caso o link do produto esteja quebrado
 const IMG_FALHA = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='20' fill='%23999'%3ESem Foto%3C/text%3E%3C/svg%3E";
@@ -95,12 +95,16 @@ function previewImagem() {
 
 async function salvar() {
     const cod = document.getElementById("codproduto").value;
+    
+    // Tratamento inteligente do preço (Troca vírgula por ponto se você digitar errado)
+    let valorDigitado = document.getElementById("valor").value;
+    valorDigitado = valorDigitado.replace(',', '.');
 
     const dados = {
         nome: document.getElementById("nome").value,
         marca: document.getElementById("marca").value,
-        valor: document.getElementById("valor").value,
-        estoque: document.getElementById("estoque").value,
+        valor: Number(valorDigitado), // Envia como número para evitar falhas
+        estoque: Number(document.getElementById("estoque").value), // Envia como número
         tipo: document.getElementById("tipo").value,
         cor: document.getElementById("cor").value,
         tamanho: document.getElementById("tamanho").value,
@@ -122,7 +126,7 @@ async function salvar() {
             method: metodo,
             headers: {
                 "Content-Type": "application/json",
-                "minha-chave": API_KEY
+                "minha-chave": API_KEY // Usando a sua senha correta!
             },
             body: JSON.stringify(dados)
         });
@@ -132,7 +136,8 @@ async function salvar() {
             showToast(cod ? "Produto atualizado com sucesso!" : "Novo produto adicionado!", "success");
             carregar();
         } else {
-            showToast("Falha ao salvar produto.", "error");
+            const erro = await res.json();
+            showToast("Falha: " + (erro.erro || "Erro ao salvar produto."), "error");
         }
     } catch(err) {
         showToast("Erro de conexão com o servidor.", "error");
@@ -182,7 +187,7 @@ async function confirmarExclusao() {
     try {
         const res = await fetch(`${API}/${idProdutoParaExcluir}`, {
             method: "DELETE",
-            headers: { "minha-chave": API_KEY }
+            headers: { "minha-chave": API_KEY } // Senha exigida para excluir
         });
 
         if (res.ok) {
@@ -208,7 +213,7 @@ function showToast(mensagem, tipo = 'success') {
 
     const config = {
         'success': { icone: 'fa-check', titulo: 'SUCESSO', cor: '#10b981' },        
-        'error':   { icone: 'fa-times', titulo: 'ERRO', cor: '#ff4757' }, // Cor ajustada para combinar com os botões do admin
+        'error':   { icone: 'fa-times', titulo: 'ERRO', cor: '#ff4757' }, 
         'warning': { icone: 'fa-exclamation', titulo: 'ATENÇÃO', cor: '#f59e0b' },   
         'info':    { icone: 'fa-info', titulo: 'INFORMAÇÃO', cor: '#3b82f6' }        
     };

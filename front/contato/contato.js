@@ -2,7 +2,6 @@ const URL_SERVIDOR = "https://projeto-programador-freese-backend.onrender.com";
 const API_URL = `${URL_SERVIDOR}/produtos`;
 const USUARIOS_URL = `${URL_SERVIDOR}/usuarios`;
 const LOGIN_URL = `${URL_SERVIDOR}/login`;
-const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
 
 const IMG_FALHA_PRODUTO = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='20' fill='%23999'%3ESem Foto%3C/text%3E%3C/svg%3E";
 const IMG_FALHA_USUARIO = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
@@ -26,6 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// NOVA FUNÇÃO: Deixa o preço com formato profissional (R$ 0,00)
+function formatarMoeda(valor) {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+}
 
 function atualizarContador() {
     if(contadorCarrinho) contadorCarrinho.innerText = carrinho.reduce((soma, p) => soma + p.qtd, 0);
@@ -62,7 +66,7 @@ async function efetuarLogin(event) {
     try {
         const resposta = await fetch(LOGIN_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json", "minha-chave": API_KEY },
+            headers: { "Content-Type": "application/json" }, // A senha não é mais enviada aqui
             body: JSON.stringify({ email: email, senha: senha, tipoLoginEscolhido: tipoLoginEscolhido })
         });
 
@@ -106,8 +110,7 @@ async function registrarCliente(event) {
     try {
         const res = await fetch(USUARIOS_URL, {
             method: "POST",
-            headers: { "minha-chave": API_KEY },
-            body: formData
+            body: formData // Sem envio da chave secreta
         });
 
         if (res.ok) {
@@ -208,7 +211,7 @@ async function salvarFotoPerfil() {
     btnSalvar.disabled = true;
 
     try {
-        const resBusca = await fetch(`${USUARIOS_URL}/${idUser}`, { headers: { "minha-chave": API_KEY } });
+        const resBusca = await fetch(`${USUARIOS_URL}/${idUser}`);
         const u = await resBusca.json();
 
         const formData = new FormData();
@@ -221,7 +224,6 @@ async function salvarFotoPerfil() {
 
         const resPut = await fetch(`${USUARIOS_URL}/${idUser}`, {
             method: "PUT",
-            headers: { "minha-chave": API_KEY },
             body: formData
         });
 
@@ -256,7 +258,7 @@ async function renderizarItensCarrinho() {
     
     if (carrinho.length === 0) {
         container.innerHTML = "<p style='text-align:center; padding: 30px 20px; color:#888; font-weight: 600;'>Seu carrinho está vazio.</p>";
-        document.getElementById("valor-total-carrinho").innerText = "R$ 0.00";
+        document.getElementById("valor-total-carrinho").innerText = formatarMoeda(0);
         return;
     }
 
@@ -276,7 +278,7 @@ async function renderizarItensCarrinho() {
                         <div style="flex-grow: 1; padding-right: 30px;">
                             <p style="font-weight: bold; font-size: 15px; color: #111; margin-bottom: 2px; text-transform: lowercase;">${p.nome}</p>
                             <p style="font-size: 13px; color: #666; margin-bottom: 3px;">Tam: ${item.tamanho || 'Único'} | Qtd: ${item.qtd}</p>
-                            <p style="font-size: 16px; font-weight: 900; color: var(--premium-red);">R$ ${Number(p.valor).toFixed(2)}</p>
+                            <p style="font-size: 16px; font-weight: 900; color: var(--premium-red);">${formatarMoeda(p.valor)}</p>
                         </div>
                         
                         <i class="fas fa-trash" 
@@ -289,7 +291,7 @@ async function renderizarItensCarrinho() {
                     </div>`;
             }
         });
-        document.getElementById("valor-total-carrinho").innerText = `R$ ${totalGeral.toFixed(2)}`;
+        document.getElementById("valor-total-carrinho").innerText = formatarMoeda(totalGeral);
     } catch (e) { console.error("Erro ao renderizar carrinho:", e); }
 }
 

@@ -2,7 +2,7 @@ const URL_SERVIDOR = "https://projeto-programador-freese-backend.onrender.com";
 const API_URL = `${URL_SERVIDOR}/produtos`;
 const USUARIOS_URL = `${URL_SERVIDOR}/usuarios`;
 const LOGIN_URL = `${URL_SERVIDOR}/login`;
-const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
+// ❌ CHAVE SECRETA REMOVIDA DAQUI! 
 
 const IMG_FALHA_PRODUTO = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='20' fill='%23999'%3ESem Foto%3C/text%3E%3C/svg%3E";
 const IMG_FALHA_USUARIO = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
@@ -196,7 +196,7 @@ async function efetuarLogin(event) {
     try {
         const resposta = await fetch(LOGIN_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'minha-chave': API_KEY },
+            headers: { 'Content-Type': 'application/json' }, // Sem envio de API_KEY
             body: JSON.stringify({ email: emailInput, senha: senhaInput, tipoLoginEscolhido })
         });
         const dados = await resposta.json();
@@ -238,8 +238,7 @@ async function registrarCliente(event) {
 
     try {
         const res = await fetch(USUARIOS_URL, {
-            method: "POST",
-            headers: { "minha-chave": API_KEY },
+            method: "POST", // Sem envio de API_KEY nos headers, o fetch cuida do FormData
             body: formData
         });
 
@@ -296,7 +295,8 @@ async function verificarStatusUsuario() {
 
         if (idUser) {
             try {
-                const res = await fetch(`${USUARIOS_URL}/${idUser}`, { headers: { "minha-chave": API_KEY } });
+                // Requisição sem API_KEY para carregar a foto atualizada
+                const res = await fetch(`${USUARIOS_URL}/${idUser}`);
                 if (res.ok) {
                     const u = await res.json();
                     if (u && u.foto_perfil) {
@@ -353,7 +353,7 @@ async function salvarFotoPerfil() {
     btnSalvar.disabled = true;
 
     try {
-        const resBusca = await fetch(`${USUARIOS_URL}/${idUser}`, { headers: { "minha-chave": API_KEY } });
+        const resBusca = await fetch(`${USUARIOS_URL}/${idUser}`);
         const u = await resBusca.json();
 
         const formData = new FormData();
@@ -366,8 +366,7 @@ async function salvarFotoPerfil() {
 
         const resPut = await fetch(`${USUARIOS_URL}/${idUser}`, {
             method: "PUT",
-            headers: { "minha-chave": API_KEY },
-            body: formData
+            body: formData // Sem envio da API_KEY
         });
 
         if (resPut.ok) {

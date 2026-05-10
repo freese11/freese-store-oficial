@@ -1,5 +1,5 @@
 const API = "https://projeto-programador-freese-backend.onrender.com/vendas";
-const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456"; // Coloque a sua senha real aqui!
+const API_KEY = "LUCAS_FREESE_SENHAZINHA111"; // Senha configurada diretamente como você pediu
 
 let vendas = [];
 let graficoInstancia = null; 
@@ -35,7 +35,7 @@ async function carregar() {
 
     } catch (error) {
         console.error("Erro ao carregar vendas:", error);
-        showToast("Erro ao carregar as vendas. Verifique a conexão ou a API_KEY.", "error");
+        showToast("Erro ao carregar as vendas. Verifique a conexão.", "error");
     }
 }
 
@@ -182,7 +182,7 @@ async function salvarStatus() {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "minha-chave": API_KEY
+                "minha-chave": API_KEY // Usando a chave que definimos lá em cima
             },
             body: JSON.stringify({ status: novoStatus })
         });
@@ -202,7 +202,7 @@ async function salvarStatus() {
 }
 
 // ============================================================
-// NOVO: FUNÇÕES DO MODAL DE DETALHES (ITENS DA VENDA)
+// FUNÇÕES DO MODAL DE DETALHES (ITENS DA VENDA)
 // ============================================================
 function abrirModalDetalhes(idVenda) {
     const venda = vendas.find(v => v.codvenda === idVenda);
@@ -217,10 +217,8 @@ function abrirModalDetalhes(idVenda) {
     if (venda.itens && venda.itens.length > 0) {
         venda.itens.forEach(item => {
             
-            // VERIFICAÇÃO ROBUSTA DE TAMANHO (Tenta várias possibilidades do banco de dados)
             let tamanhoDoItem = item.tamanho || item.Tamanho || item.tamanhos || item.tam || item.Tamanhos;
             
-            // Se o banco de dados mandou nulo ou vazio, coloca 'Único'
             if (!tamanhoDoItem || tamanhoDoItem === "null" || tamanhoDoItem === "undefined" || String(tamanhoDoItem).trim() === "") {
                 tamanhoDoItem = 'Único';
             }

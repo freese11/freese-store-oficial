@@ -35,6 +35,12 @@ app.use("/produtos", (req, res, next) => {
     return autenticarAPIkey(req, res, next); 
 }, produtosRouter);
 
+// 🔹 Vendas / Checkout (Permite POST para o cliente comprar, exige chave para o resto)
+app.use("/vendas", (req, res, next) => {
+    if (req.method === 'POST') return next(); 
+    return autenticarAPIkey(req, res, next); 
+}, vendasRouter);
+
 // 🔹 Usuários (Para os clientes criarem conta e logarem normalmente)
 app.use("/usuarios", usuariosRouter);
 
@@ -91,7 +97,6 @@ app.use(autenticarAPIkey);
 // 3. ÁREA RESTRITA (Requer API Key)
 // ==========================================
 app.use("/clientes", clientesRouter);
-app.use("/vendas", vendasRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {

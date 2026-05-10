@@ -1,6 +1,6 @@
 const URL_SERVIDOR = "https://projeto-programador-freese-backend.onrender.com";
 const API = `${URL_SERVIDOR}/usuarios`;
-const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
+const API_KEY = "LUCAS_FREESE_SENHAZINHA111"; // Sua senha configurada aqui!
 
 // Imagem de segurança ultra-forte embutida
 const IMG_FALHA_USUARIO = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";

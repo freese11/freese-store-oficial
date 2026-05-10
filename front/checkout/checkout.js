@@ -2,7 +2,7 @@
 const URL_SERVIDOR = "https://projeto-programador-freese-backend.onrender.com";
 const API_URL = `${URL_SERVIDOR}/produtos`;
 const VENDAS_URL = `${URL_SERVIDOR}/vendas`;
-const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
+// ❌ A CHAVE SECRETA FOI REMOVIDA PARA MANTER A LOJA SEGURA
 
 // Pega o carrinho que o cliente montou na home
 let carrinhoCheckout = JSON.parse(localStorage.getItem("carrinho")) || [];
@@ -132,7 +132,7 @@ async function processarCompra() {
             id: item.codproduto,
             quantidade: item.qtd,
             preco: produto ? produto.valor : 0, // Pega o preço atualizado do banco
-            tamanho: item.tamanho || 'Único' // << AQUI ESTÁ A GRANDE CORREÇÃO! AGORA ELE ENVIA O TAMANHO.
+            tamanho: item.tamanho || 'Único' 
         };
     });
 
@@ -142,12 +142,11 @@ async function processarCompra() {
     btn.disabled = true;
 
     try {
-        // Envia pro backend novo que fizemos!
+        // Envia pro backend novo de forma segura! (Sem expor chave secreta)
         const resposta = await fetch(VENDAS_URL, {
             method: "POST",
             headers: { 
-                "Content-Type": "application/json",
-                "minha-chave": API_KEY 
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 codusuario: codusuario,
