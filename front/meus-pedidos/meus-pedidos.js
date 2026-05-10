@@ -30,8 +30,8 @@ async function carregarMeusPedidos(meuId) {
     const container = document.getElementById("lista-pedidos");
 
     try {
-        // O cliente busca os pedidos dele sem precisar de chave de administrador
-        const resposta = await fetch(API_VENDAS, {
+        // 👇 A MÁGICA ACONTECE AQUI: Buscando APENAS na rota segura do cliente
+        const resposta = await fetch(`${API_VENDAS}/meus-pedidos/${meuId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -40,11 +40,9 @@ async function carregarMeusPedidos(meuId) {
 
         if (!resposta.ok) throw new Error("Erro no servidor");
 
-        const todasVendas = await resposta.json();
+        // Já vem direto do banco só as compras dele! Nada de filtrar no JS.
+        const meusPedidos = await resposta.json();
         
-        // Filtra para mostrar APENAS os pedidos do cliente logado
-        const meusPedidos = todasVendas.filter(venda => venda.codusuario == meuId).reverse();
-
         pedidosMemoria = meusPedidos;
         
         console.log("📦 Status dos Pedidos vindos do Banco:", meusPedidos);
@@ -96,7 +94,7 @@ function renderizarPedidos(pedidos) {
         let textoStatus = 'PENDENTE';
         let iconeStatus = 'fa-clock';
 
-        if (statusBanco === 'concluido' || statusBanco === 'concluído') {
+        if (statusBanco === 'concluido' || statusBanco === 'concluído' || statusBanco === 'finalizado') {
             classeStatus = 'status-concluido';
             classeLinha = 'linha-concluido';
             textoStatus = 'FINALIZADO';
@@ -166,7 +164,7 @@ function abrirModalDetalhes(idVenda) {
     let classeStatus = 'status-pendente';
     let textoStatus = 'PENDENTE';
     
-    if (statusBanco === 'concluido' || statusBanco === 'concluído') {
+    if (statusBanco === 'concluido' || statusBanco === 'concluído' || statusBanco === 'finalizado') {
         classeStatus = 'status-concluido'; textoStatus = 'FINALIZADO';
     } else if (statusBanco === 'cancelado' || statusBanco === 'recusado') {
         classeStatus = 'status-cancelado'; textoStatus = 'CANCELADO';

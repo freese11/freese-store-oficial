@@ -3,7 +3,7 @@ const pool = require('../db');
 
 const router = express.Router();
 
-// 1. BUSCAR TODAS AS VENDAS (COM AS ROUPAS COMPRADAS, FOTOS E TAMANHO!)
+// 1. BUSCAR TODAS AS VENDAS (Protegido - Apenas Admin vê tudo)
 router.get('/', async (req, res) => {
     try {
         const sqlVendas = `
@@ -16,14 +16,12 @@ router.get('/', async (req, res) => {
         const vendas = resultVendas.rows;
 
         for (let venda of vendas) {
-            // 👇 AQUI: Adicionamos o iv.tamanho na busca 👇
             const sqlItens = `
                 SELECT iv.quantidade, iv.precounitario AS preco_unitario, iv.tamanho, p.nome, p.img AS imagem
                 FROM itens_venda iv
                 LEFT JOIN produtos p ON iv.codproduto = p.codproduto
                 WHERE iv.codvenda = $1
             `;
-            
             const resultItens = await pool.query(sqlItens, [venda.codvenda]);
             venda.itens = resultItens.rows; 
         }
@@ -35,11 +33,44 @@ router.get('/', async (req, res) => {
     }
 });
 
-// 2. BUSCAR UMA VENDA ESPECÍFICA
+// 2. NOVA ROTA SEGURA: BUSCAR APENAS OS PEDIDOS DO CLIENTE LOGADO
+router.get('/meus-pedidos/:codusuario', async (req, res) => {
+    try {
+        const { codusuario } = req.params;
+        
+        // Puxa APENAS onde o codusuario for igual ao do cliente
+        const sqlVendas = `
+            SELECT vendas.*, usuarios.nome AS nome_cliente 
+            FROM vendas 
+            LEFT JOIN usuarios ON vendas.codusuario = usuarios.codusuario
+            WHERE vendas.codusuario = $1
+            ORDER BY vendas.codvenda DESC
+        `;
+        const resultVendas = await pool.query(sqlVendas, [codusuario]);
+        const vendas = resultVendas.rows;
+
+        for (let venda of vendas) {
+            const sqlItens = `
+                SELECT iv.quantidade, iv.precounitario AS preco_unitario, iv.tamanho, p.nome, p.img AS imagem
+                FROM itens_venda iv
+                LEFT JOIN produtos p ON iv.codproduto = p.codproduto
+                WHERE iv.codvenda = $1
+            `;
+            const resultItens = await pool.query(sqlItens, [venda.codvenda]);
+            venda.itens = resultItens.rows; 
+        }
+
+        res.json(vendas);
+    } catch (err) {
+        console.error("Erro ao buscar meus pedidos:", err.message);
+        res.status(500).send('Erro no servidor');
+    }
+});
+
+// 3. BUSCAR UMA VENDA ESPECÍFICA (Admin)
 router.get('/:codvenda', async (req, res) => {
     try {
         const { codvenda } = req.params;
-        
         const sqlVenda = `
             SELECT vendas.*, usuarios.nome AS nome_cliente 
             FROM vendas 
@@ -53,8 +84,6 @@ router.get('/:codvenda', async (req, res) => {
         }
 
         const venda = resultVenda.rows[0];
-
-        // 👇 AQUI TAMBÉM: Adicionamos o iv.tamanho na busca 👇
         const sqlItens = `
             SELECT iv.quantidade, iv.precounitario AS preco_unitario, iv.tamanho, p.nome, p.img AS imagem
             FROM itens_venda iv
@@ -72,7 +101,7 @@ router.get('/:codvenda', async (req, res) => {
 });
 
 // =======================================================
-// ROTA DE CRIAR VENDA (AGORA SALVANDO O TAMANHO!)
+// ROTA DE CRIAR VENDA (SALVANDO TAMANHO)
 // =======================================================
 router.post('/', async (req, res) => {
     const { codusuario, carrinho, endereco_entrega } = req.body;
@@ -97,14 +126,12 @@ router.post('/', async (req, res) => {
         const resultVenda = await pool.query(sqlVenda, valoresVenda);
         const codVendaGerado = resultVenda.rows[0].codvenda;
 
-        // 👇 AQUI ESTÁ A MÁGICA: Adicionamos a coluna "tamanho" e o "$5" 👇
         const sqlItem = `
             INSERT INTO itens_venda (codvenda, codproduto, quantidade, precounitario, tamanho) 
             VALUES ($1, $2, $3, $4, $5);
         `;
 
         for (let item of carrinho) {
-            // 👇 E aqui passamos o item.tamanho para o banco (se não tiver, vai como 'Único') 👇
             await pool.query(sqlItem, [
                 codVendaGerado, 
                 item.id, 
@@ -126,7 +153,7 @@ router.post('/', async (req, res) => {
 });
 
 // =======================================================
-// ROTAS DE DELETAR E ATUALIZAR VENDA (INTACTAS)
+// ROTAS DE DELETAR E ATUALIZAR VENDA
 // =======================================================
 router.delete("/:codvenda", async (req, res) => {
     try {
