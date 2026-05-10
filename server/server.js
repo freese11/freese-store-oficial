@@ -1,7 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 const cors = require('cors');
-const path = require('path'); // 🔹 Adicionado para encontrar as pastas corretamente
+const path = require('path');
 const pool = require('./db');
 
 const produtosRouter = require("./routes/produtosDB");
@@ -29,8 +29,14 @@ app.get("/", (req, res) => {
   res.send("🌎 API da Freese Store rodando!");
 });
 
-// 🔹 Catálogo de Produtos (Os clientes precisam ver os produtos sem ter senha)
-app.use("/produtos", produtosRouter);
+// 🔹 Catálogo de Produtos (Apenas Visualização. Para deletar, vai pedir a chave)
+app.use("/produtos", (req, res, next) => {
+    if (req.method === 'GET') return next(); 
+    return autenticarAPIkey(req, res, next); 
+}, produtosRouter);
+
+// 🔹 Usuários (Para os clientes criarem conta e logarem normalmente)
+app.use("/usuarios", usuariosRouter);
 
 // 🔹 Rota de Login Unificada (Pública, para permitir que entrem)
 app.post("/login", async (req, res) => {
@@ -55,14 +61,13 @@ app.post("/login", async (req, res) => {
         if (result.rows.length > 0) {
             const user = result.rows[0];
             
-            // 👇 AQUI ESTÁ A CORREÇÃO! AGORA ENVIAMOS TODOS OS DADOS 👇
             res.json({
                 sucesso: true,
-                codusuario: user.codusuario, // ID do usuário
+                codusuario: user.codusuario, 
                 nome: user.nome,
                 email: user.email,
                 tipo: user.perfil,
-                foto_perfil: user.foto_perfil // A foto vai junto no login agora!
+                foto_perfil: user.foto_perfil 
             });
         } else {
             res.status(401).json({
@@ -86,7 +91,6 @@ app.use(autenticarAPIkey);
 // 3. ÁREA RESTRITA (Requer API Key)
 // ==========================================
 app.use("/clientes", clientesRouter);
-app.use("/usuarios", usuariosRouter);
 app.use("/vendas", vendasRouter);
 
 const PORT = process.env.PORT || 3000;

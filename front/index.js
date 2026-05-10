@@ -2,7 +2,6 @@ const URL_SERVIDOR = "https://projeto-programador-freese-backend.onrender.com";
 const API_URL = `${URL_SERVIDOR}/produtos`;
 const USUARIOS_URL = `${URL_SERVIDOR}/usuarios`;
 const LOGIN_URL = `${URL_SERVIDOR}/login`;
-const API_KEY = "SUA_CHAVE_SECRETA_MUITO_FORTE_123456";
 
 const IMG_FALHA_PRODUTO = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='20' fill='%23999'%3ESem Foto%3C/text%3E%3C/svg%3E";
 const IMG_FALHA_USUARIO = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
@@ -46,10 +45,6 @@ async function carregarProdutosHome() {
         const resposta = await fetch(API_URL);
         todosProdutos = await resposta.json();
         
-        // -------------------------------------------------------------
-        // MUDANÇA AQUI: Pegando os 3 últimos produtos (lançamentos)
-        // e invertendo a ordem para o mais novo aparecer primeiro!
-        // -------------------------------------------------------------
         const destaques = todosProdutos.slice(-3).reverse();
         
         listaProdutosDestaque.innerHTML = "";
@@ -122,7 +117,7 @@ async function verificarStatusUsuario() {
 
         if (idUser) {
             try {
-                const res = await fetch(`${USUARIOS_URL}/${idUser}`, { headers: { "minha-chave": API_KEY } });
+                const res = await fetch(`${USUARIOS_URL}/${idUser}`);
                 
                 if (res.ok) {
                     const u = await res.json();
@@ -193,7 +188,7 @@ async function efetuarLogin(event) {
     try {
         const response = await fetch(LOGIN_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json", "minha-chave": API_KEY },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, senha, tipoLoginEscolhido })
         });
         const dados = await response.json();
@@ -237,7 +232,6 @@ async function registrarCliente(event) {
     try {
         const res = await fetch(USUARIOS_URL, {
             method: "POST",
-            headers: { "minha-chave": API_KEY },
             body: formData
         });
 
@@ -365,7 +359,7 @@ async function salvarFotoPerfil() {
     btnSalvar.disabled = true;
 
     try {
-        const resBusca = await fetch(`${USUARIOS_URL}/${idUser}`, { headers: { "minha-chave": API_KEY } });
+        const resBusca = await fetch(`${USUARIOS_URL}/${idUser}`);
         const u = await resBusca.json();
 
         const formData = new FormData();
@@ -378,7 +372,6 @@ async function salvarFotoPerfil() {
 
         const resPut = await fetch(`${USUARIOS_URL}/${idUser}`, {
             method: "PUT",
-            headers: { "minha-chave": API_KEY },
             body: formData
         });
 
@@ -397,12 +390,11 @@ function showToast(mensagem, tipo = 'success') {
     const container = document.getElementById('toast-container');
     if (!container) return;
 
-    // Dicionário com as cores, ícones e títulos Exclusivos
     const config = {
-        'success': { icone: 'fa-check', titulo: 'SUCESSO', cor: '#10b981' },        // Verde esmeralda
-        'error':   { icone: 'fa-times', titulo: 'ERRO', cor: 'var(--premium-red)' }, // Vermelho da loja
-        'warning': { icone: 'fa-exclamation', titulo: 'ATENÇÃO', cor: '#f59e0b' },   // Amarelo
-        'info':    { icone: 'fa-info', titulo: 'INFORMAÇÃO', cor: '#3b82f6' }        // Azul
+        'success': { icone: 'fa-check', titulo: 'SUCESSO', cor: '#10b981' },        
+        'error':   { icone: 'fa-times', titulo: 'ERRO', cor: 'var(--premium-red)' }, 
+        'warning': { icone: 'fa-exclamation', titulo: 'ATENÇÃO', cor: '#f59e0b' },   
+        'info':    { icone: 'fa-info', titulo: 'INFORMAÇÃO', cor: '#3b82f6' }        
     };
 
     const atual = config[tipo] || config['info'];
@@ -410,10 +402,8 @@ function showToast(mensagem, tipo = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast-freese ${tipo}`;
     
-    // Injeta a cor certa para a barrinha animada no CSS
     toast.style.setProperty('--toast-cor', atual.cor);
 
-    // Estrutura premium do aviso
     toast.innerHTML = `
         <div class="toast-icon" style="color: ${atual.cor}">
             <i class="fas ${atual.icone}"></i>
@@ -427,12 +417,10 @@ function showToast(mensagem, tipo = 'success') {
 
     container.appendChild(toast);
 
-    // Animação de entrada
     setTimeout(() => toast.classList.add('show'), 10);
 
-    // Some depois de 3.5 segundos exatos (mesmo tempo da barrinha sumir)
     setTimeout(() => {
         toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400); // Espera o CSS fechar para excluir
+        setTimeout(() => toast.remove(), 400); 
     }, 3500);
 }
