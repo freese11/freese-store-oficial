@@ -101,7 +101,7 @@ router.get('/:codvenda', async (req, res) => {
 });
 
 // =======================================================
-// ROTA DE CRIAR VENDA (SALVANDO TAMANHO)
+// ROTA DE CRIAR VENDA (SALVANDO TAMANHO E STATUS PENDENTE)
 // =======================================================
 router.post('/', async (req, res) => {
     const { codusuario, carrinho, endereco_entrega } = req.body;
@@ -116,9 +116,10 @@ router.post('/', async (req, res) => {
             valorTotal += (item.preco * item.quantidade);
         }
 
+        // ✅ CORREÇÃO AQUI: Mudamos de 'Finalizado' para 'Pendente'
         const sqlVenda = `
             INSERT INTO vendas (codusuario, status, data, valortotal, endereco_entrega) 
-            VALUES ($1, 'Finalizado', CURRENT_DATE, $2, $3) 
+            VALUES ($1, 'Pendente', CURRENT_DATE, $2, $3) 
             RETURNING codvenda;
         `;
         
