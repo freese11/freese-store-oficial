@@ -8,16 +8,11 @@ const router = express.Router();
 // 🔹 Configuração do Multer nível Sênior
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        // Usamos __dirname para voltar uma pasta (..) e entrar em uploads/usuarios. 
-        // Isso é 100% à prova de falhas no Render!
         const dirUploads = path.join(__dirname, '..', 'uploads', 'usuarios');
-        
-        // Verifica e cria a pasta na hora de salvar o arquivo
         if (!fs.existsSync(dirUploads)) {
             fs.mkdirSync(dirUploads, { recursive: true });
             console.log("Pasta criada com sucesso:", dirUploads);
         }
-        
         cb(null, dirUploads);
     },
     filename: (req, file, cb) => {
@@ -26,21 +21,22 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// LISTAR TODOS (GET)
+// LISTAR TODOS (GET) - 🔴 BLINDADO: SENHA REMOVIDA DO SELECT
 router.get("/", async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM usuarios ORDER BY codusuario DESC");
+        // Trocamos o SELECT * pelos campos exatos. A senha NÃO vai mais para a web!
+        const result = await pool.query("SELECT codusuario, nome, email, numero, perfil, foto_perfil FROM usuarios ORDER BY codusuario DESC");
         res.json(result.rows);
     } catch (err) {
         res.status(500).json({ erro: err.message });
     }
 });
 
-// BUSCAR UM (GET)
+// BUSCAR UM (GET) - 🔴 BLINDADO: SENHA REMOVIDA DO SELECT
 router.get("/:codusuario", async (req, res) => {
     try {
         const { codusuario } = req.params;
-        const result = await pool.query("SELECT * FROM usuarios WHERE codusuario=$1", [codusuario]);
+        const result = await pool.query("SELECT codusuario, nome, email, numero, perfil, foto_perfil FROM usuarios WHERE codusuario=$1", [codusuario]);
         res.json(result.rows[0]);
     } catch (err) {
         res.status(500).json({ erro: "Erro ao buscar" });
@@ -57,16 +53,17 @@ router.post("/", upload.single("foto"), async (req, res) => {
             fotoFinal = "/uploads/usuarios/" + req.file.filename;
         }
 
+        // Blindado: O RETURNING não devolve mais a senha após criar a conta
         const result = await pool.query(
             `INSERT INTO usuarios (nome, email, numero, senha, perfil, foto_perfil) 
-             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+             VALUES ($1, $2, $3, $4, $5, $6) 
+             RETURNING codusuario, nome, email, numero, perfil, foto_perfil`,
             [nome, email, numero, senha, perfil, fotoFinal]
         );
 
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error("ERRO NO POST:", err);
-        // Se for erro de e-mail duplicado, avisamos de forma clara!
         if (err.code === '23505') {
             return res.status(400).json({ erro: "Este e-mail já está cadastrado!" });
         }
@@ -91,10 +88,12 @@ router.put("/:codusuario", upload.single("foto"), async (req, res) => {
             fotoFinal = "/uploads/usuarios/" + req.file.filename;
         }
 
+        // Blindado: O RETURNING não devolve mais a senha após atualizar
         const result = await pool.query(
             `UPDATE usuarios 
              SET nome=$1, email=$2, numero=$3, senha=$4, perfil=$5, foto_perfil=$6
-             WHERE codusuario=$7 RETURNING *`,
+             WHERE codusuario=$7 
+             RETURNING codusuario, nome, email, numero, perfil, foto_perfil`,
             [nome, email, numero, senha, perfil, fotoFinal, codusuario]
         );
 
